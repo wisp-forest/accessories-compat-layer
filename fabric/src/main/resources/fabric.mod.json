@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "${mod_id}",
+  "provides": [
+    "tclayer"
+  ],
   "version": "${mod_version}",
   "name": "${mod_name}",
   "description": "${mod_description}",
@@ -18,15 +21,16 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.example.example_mod.fabric.ExampleModFabricInit"
+      "io.wispforest.accessories_compat.fabric.AccessoriesCompatFabricInit"
     ],
     "client": [
-      "com.example.example_mod.fabric.client.ExampleModClientFabricInit"
+      "io.wispforest.accessories_compat.fabric.client.AccessoriesCompatClientFabricInit"
     ]
   },
   "mixins": [
     "${mod_id}-fabric.mixins.json",
-    "${mod_id}-common.mixins.json"
+    "${mod_id}-common.mixins.json",
+    "${mod_id}-trinkets.mixins.json"
   ],
   "accessWidener": "${mod_id}-fabric.accesswidener",
   "depends": {

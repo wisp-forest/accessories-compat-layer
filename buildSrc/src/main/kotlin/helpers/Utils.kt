@@ -17,7 +17,7 @@ object Utils {
 
             val enabledMixinDebuggingPlatforms = (rootProject.property("enabled_mixin_debugging_platforms") as String).split(",")
             val enabledRenderDocPlatforms = (rootProject.property("enabled_renderdoc_debugging_platforms") as String).split(",");
-            val enabledTestmodPlatforms = (rootProject.property("enabled_renderdoc_debugging_platforms") as String).split(",");
+            val enabledTestmodPlatforms = (rootProject.property("enabled_testmod_platforms") as String).split(",");
 
             val renderDocPath = System.getenv("renderDocPath");
 
@@ -203,12 +203,6 @@ object Utils {
         val propertyValue = rootProject.property(propKey) as String;
 
         return (if (propertyValue.isNotBlank()) "\"$entryKey\": \"$propertyValue\"" else "");
-    }
-
-    fun getFilterTransform(): Transformer<String?, String> {
-        return Transformer { value ->
-            return@Transformer ((if (value.contains(removeLineTarget) ) null else value) as String)
-        }
     }
 
     fun currentPlatform(project: Project): String {

@@ -24,7 +24,7 @@ include("fabric")
 include("neoforge")
 include("neoforge-publish")
 
-rootProject.name = "example_mod"//rootProject.property("mod_name")
+rootProject.name = "accessories_compat"//rootProject.property("mod_name")
 
 
 

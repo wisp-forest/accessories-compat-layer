@@ -1,4 +1,5 @@
 import helpers.Utils
+import helpers.UtilsJava
 import org.gradle.accessors.dm.LibrariesForLibs
 
 val libs get() = the<LibrariesForLibs>()
@@ -54,16 +55,12 @@ if (currentPlatform != "common" && enabledTestmodPlatforms.contains(currentPlatf
 dependencies {
     minecraft("com.mojang:minecraft:${libs.versions.minecraft.asProvider().get()}")
 
-    if (name == "common-mojmap") {
-        mappings(loom.officialMojangMappings())
-    } else {
-        mappings(
-            loom.layered {
-                this.officialMojangMappings()
-                this.parchment("org.parchmentmc.data:parchment-${libs.versions.minecraft.asProvider().get()}:${libs.versions.parchment.get()}@zip")
-            }
-        )
-    }
+    mappings(
+        loom.layered {
+            this.officialMojangMappings()
+            this.parchment("org.parchmentmc.data:parchment-${libs.versions.minecraft.asProvider().get()}:${libs.versions.parchment.get()}@zip")
+        }
+    )
 
     if (currentPlatform != "common" && enabledTestmodPlatforms.contains(currentPlatform)) {
         "testmodImplementation"(sourceSets.main.get().output)
@@ -145,13 +142,13 @@ tasks.processResources {
     expandProps["list_of_contributors"] = Utils.buildListEntry(project, (rootProject.property("mod_contributors") as String).split(","))
     // --
 
-    filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/neoforge.mods.toml", "*.mixins.json")) {
+    filesMatching(listOf("pack.mcmeta", "fabric.mod.json", "META-INF/neoforge.mods.toml"/*, "*.mixins.json"*/)) {
         expand(expandProps)
     }
 
     // Fabric: Remove various entries that are there due to inability to properly add string data without breaking FMJ before looms reading
     // Note: Stupid Cast to remove error that is wrong
-    filesMatching(listOf("fabric.mod.json")) { filter(Utils.getFilterTransform())  }
+    filesMatching(listOf("fabric.mod.json")) { filter(UtilsJava.removeLineTransformer())  }
     // --
 
     inputs.properties(expandProps)

@@ -5,6 +5,7 @@ license = "${mod_license}"
 
 [[mods]]
 modId = "${mod_id}"
+provides = [ "tclayer" ]
 version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}, ${mod_contributors}"
@@ -19,6 +20,8 @@ displayURL = "${mod_sourcepage}"
 config = '${mod_id}-common.mixins.json'
 [[mixins]]
 config = '${mod_id}-neoforge.mixins.json'
+[[mixins]]
+config = '${mod_id}-trinkets.mixins.json'
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"

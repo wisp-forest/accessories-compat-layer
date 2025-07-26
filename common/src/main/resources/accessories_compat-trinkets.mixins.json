@@ -1,0 +1,42 @@
+{
+  "required": true,
+  "package": "io.wispforest.accessories_compat.trinkets.mixin",
+  "plugin": "io.wispforest.accessories_compat.trinkets.mixin.TrinketsCompatMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "accessor.GroupDataAccessor",
+    "accessor.SlotDataAccessor",
+    "accessor.SlotLoaderAccessor",
+    "accessories.SlotGroupLoaderMixin",
+    "owo.ConfigWrapperMixin",
+    "events.TrinketDropCallbackMixin",
+    "events.TrinketEquipCallbackMixin",
+    "events.TrinketUnequipCallbackMixin",
+    "EnchantmentHelperMixin",
+    "EntitySlotLoaderMixin",
+    "InventoryMenuMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PlayerListMixin",
+    "SlotAttributesMixin",
+    "SlotGroupMixin",
+    "SlotGroupMixin$SlotGroupBuilderAccessor",
+    "TrinketItemMixin",
+    "TrinketsAPIMixin",
+    "TrinketsAttributeModifiersComponentMixin",
+    "TrinketsAttributeModifiersComponentMixin$EntryMixin",
+    "TrinketScreenManagerMixin",
+    "TrinketsMainMixin"
+  ],
+  "client": [
+    "client.AbstractContainerScreenMixin",
+    "client.AccessoriesExperimentalScreenMixin",
+    "client.LivingEntityMixin",
+    "client.LivingEntityRendererMixin",
+    "client.TrinketRendererRegistryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

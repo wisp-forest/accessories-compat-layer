@@ -31,6 +31,9 @@ repositories {
     // oωo (owo-lib) and Endec Lib
     maven("https://maven.wispforest.io/releases")
     // --
+
+    // Mixin Squard
+    maven("https://maven.bawnorton.com/releases")
 }
 
 dependencies {
@@ -43,6 +46,14 @@ dependencies {
     implementation(libs.jankson)
 
     api(libs.ffapi.base) { exclude(group = "fabric-api")  }
+
+    implementation(libs.mixin.squared.neoforge)
+//    jarJar(libs.mixin.squared.neoforge) {
+//        version {
+//            strictly("[${libs.versions.mixinsquared.get()}},)")
+//            prefer(libs.versions.mixinsquared.get())
+//        }
+//    }
 }
 
 neoForge {

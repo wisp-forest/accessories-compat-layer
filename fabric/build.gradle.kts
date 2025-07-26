@@ -40,6 +40,10 @@ repositories {
     // EMI Item Viewer
     maven("https://maven.terraformersmc.com/releases")
     // --
+    maven("https://maven.ladysnake.org/releases")
+
+    // Mixin Squard
+    maven("https://maven.bawnorton.com/releases")
 }
 
 dependencies {
@@ -55,6 +59,14 @@ dependencies {
     modCompileOnly(libs.modmenu)
     modLocalRuntime(libs.modmenu)
     //--
+
+    modImplementation(libs.trinkets)
+
+    modImplementation(libs.accessories.fabric)
+
+    annotationProcessor(libs.mixin.squared.fabric)
+    implementation(libs.mixin.squared.fabric)
+    include(libs.mixin.squared.fabric)
 }
 
 loom {

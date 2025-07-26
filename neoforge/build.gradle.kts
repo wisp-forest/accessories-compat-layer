@@ -47,6 +47,11 @@ repositories {
     // EMI Item Viewer
     maven("https://maven.terraformersmc.com/releases")
     // --
+
+    maven("https://maven.theillusivec4.top/")
+
+    // Mixin Squard
+    maven("https://maven.bawnorton.com/releases")
 }
 
 dependencies {
@@ -64,6 +69,14 @@ dependencies {
     forgeRuntimeLibrary(libs.endec.jankson)
     forgeRuntimeLibrary(libs.jankson)
     // --
+
+    modImplementation(libs.curios)
+
+    modImplementation(libs.accessories.neoforge)
+
+    annotationProcessor(libs.mixin.squared.neoforge)
+    implementation(libs.mixin.squared.neoforge)
+    include(libs.mixin.squared.neoforge)
 }
 
 loom {

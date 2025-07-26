@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "io.wispforest.accessories_compat.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "AccessoriesAPIMixin",
+    "AccessoriesEventHandlerMixin",
+    "AccessoriesForgeMixin",
+    "AccessoryMixin",
+    "DataLoaderBaseMixin",
+    "EntitySlotLoaderMixin",
+    "SlotTypeLoaderMixin",
+    "TagGroupLoaderMixin"
+  ],
+  "client": [
+    "client.AccessoriesRendererRegistryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

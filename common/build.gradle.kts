@@ -1,3 +1,6 @@
+import java.util.function.BiConsumer
+import java.util.function.BiFunction
+
 plugins {
     id("multiloader-mojmap")
     id("multiloader-publishing")
@@ -34,9 +37,27 @@ repositories {
     // EMI Item Viewer
     maven("https://maven.terraformersmc.com/releases")
     // --
+
+    maven("https://maven.terraformersmc.com/")
+    maven("https://maven.ladysnake.org/releases")
+
+    maven("https://maven.theillusivec4.top/")
+
+    // Mixin Squard
+    maven("https://maven.bawnorton.com/releases")
 }
 
 dependencies {
+    fun fabricModule(dependencyMethod: BiConsumer<Dependency, Action<Dependency>>, vararg moduleNames: String, action: Action<Dependency>? = null) {
+        for (moduleName in moduleNames) {
+            dependencyMethod.accept(fabricApi.module(moduleName, libs.versions.fabric.api.asProvider().get())){
+                (this as ModuleDependency).exclude(group = "fabric-api", module = "")
+
+                action?.execute(this)
+            }
+        }
+    }
+
     // Core Libs
     modImplementation(libs.fabric.loader)
     compileOnly(libs.mixin.extras.common)
@@ -46,10 +67,19 @@ dependencies {
     // General Libs
     modApi(libs.owolib.fabric)
     annotationProcessor(libs.owolib.fabric)
-    modCompileOnlyApi(fabricApi.module("fabric-api-base", libs.versions.fabric.api.asProvider().get())){
-        (this as ModuleDependency).exclude(group = "fabric-api", module = "")
-    }
+
+    fabricModule(this::modCompileOnlyApi, "fabric-api-base")
     // --
+
+    modImplementation(libs.accessories.common)
+
+    modCompileOnly(libs.trinkets)
+    fabricModule(this::modCompileOnly, "fabric-resource-loader-v0", "fabric-events-interaction-v0")
+
+    modCompileOnly(libs.curios)
+
+    annotationProcessor(libs.mixin.squared.common)
+    implementation(libs.mixin.squared.common)
 }
 
 sourceSets {

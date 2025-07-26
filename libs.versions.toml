@@ -3,51 +3,61 @@
 [versions]
 java = "21"
 
-minecraft = "1.21.4"
-minecraft_base = "1.21.4"
+minecraft = "1.21.1"
+minecraft_base = "1.21.1"
 
-neoforge_minecraft_range = "[1.21.4,1.21.5)"
-fabric_minecraft_range = "~1.21.4"
+neoforge_minecraft_range = "[1.21.1,1.21.1)"
+fabric_minecraft_range = "~1.21.1"
 
 # https://parchmentmc.org/docs/getting-started
-parchment = "2025.02.16"
+parchment = "2024.11.17"
 
 # Core Libs
 
 fabric_loader = "0.16.10"           # https://fabricmc.net/develop
-fabric_api    = "0.112.0+1.21.4"    # https://fabricmc.net/develop
+fabric_api    = "0.116.4+1.21.1"    # https://fabricmc.net/develop
 
-fabric_loader_range=">=0.16.9"
+fabric_loader_range=">=0.16.10"
 fabric_api_range="*"
 
-neoforge      = "21.4.89-beta"      # https://projects.neoforged.net/neoforged/neoforge
+neoforge      = "21.1.191"      # https://projects.neoforged.net/neoforged/neoforge
 ffapi_base    = "0.4.42+d1308dedd1"
 
-neoforge_range="[21.4.33-beta,)"
+neoforge_range="[21.1.191,)"
 neoforge_loader_range="[4,)"
+
+accessories="1.1.0-beta.43+1.21.1"
+
+accessories_range_fabric=">=1.1.0-beta.43+1.21.1"
+accessories_range_neoforge="[1.1.0-beta.43+1.21.1,)"
+
+trinkets="3.10.0"
+
+curios="9.5.1+1.21.1"
 
 # Libs
 
 mixinextras = "0.4.1"
+mixinsquared = "0.3.3"
 
-modmenu = "13.0.0-beta.1"        # https://modrinth.com/mod/modmenu/versions
+modmenu = "11.0.3"        # https://modrinth.com/mod/modmenu/versions
 
-endec         = "0.1.9"
-endec_netty   = "0.1.5"
-endec_gson    = "0.1.6"
-endec_jankson = "0.1.6"
+endec         = "0.1.8.1"
+endec_netty   = "0.1.4"
+endec_gson    = "0.1.5.1"
+endec_jankson = "0.1.5.1"
 
-owo_fabric   = "0.12.19+1.21.4"
-owo_neoforge = "0.12.19-beta.2+1.21.4"
+owo_fabric   = "0.12.15.4+1.21"
+owo_neoforge = "0.12.15.1-beta.6+1.21"
 
-owo_fabric_range   = ">=0.12.19+1.21.4"
-owo_neoforge_range = ">=0.12.19-beta.2+1.21.4"
+owo_fabric_range   = ">=0.12.15.4+1.21"
+owo_neoforge_range = "[0.12.15.4+1.21,)"
 
 jankson = "1.2.2"
 
 # Item Viewer Info 
-rei      = "18.0.796"
-arch_api = "15.0.1"               # https://modrinth.com/mod/architectury-api/versions
+rei      = "16.0.799"
+arch_api = "13.0.8"               # https://modrinth.com/mod/architectury-api/versions
 
 emi = "1.1.18+1.21.1"
 
@@ -74,6 +84,10 @@ rei_common_default_plugin = { module = "me.shedaniel:RoughlyEnoughItems-default-
 
 emi_common = { group = "dev.emi", name = "emi-xplat-intermediary", version.ref = "emi"}
 
+mixin_squared_common = { module = "com.github.bawnorton.mixinsquared:mixinsquared-common", version.ref = "mixinsquared" }
+
+accessories_common = { module = "io.wispforest:accessories-common", version.ref = "accessories"}
+
 # Fabric
 
 owolib_fabric = { module = "io.wispforest:owo-lib", version.ref = "owo_fabric" }
@@ -87,6 +101,12 @@ rei_fabric     = { module = "me.shedaniel:RoughlyEnoughItems-fabric", version.re
 
 emi_fabric     = { group = "dev.emi", name = "emi-fabric", version.ref = "emi" }
 
+mixin_squared_fabric = { module = "com.github.bawnorton.mixinsquared:mixinsquared-fabric", version.ref = "mixinsquared" }
+
+accessories_fabric = { module = "io.wispforest:accessories-fabric", version.ref = "accessories"}
+
+trinkets = { module = "dev.emi:trinkets", version.ref = "trinkets" }
+
 # Neoforge
 
 owolib_neo = { module = "io.wispforest:owo-lib-neoforge", version.ref = "owo_neoforge" }
@@ -99,6 +119,12 @@ rei_neoforge_api = { module = "me.shedaniel:RoughlyEnoughItems-api-neoforge", ve
 rei_neoforge     = { module = "me.shedaniel:RoughlyEnoughItems-neoforge", version.ref = "rei" }
 
 emi_neoforge =     { group = "dev.emi", name = "emi-neoforge", version.ref = "emi" }
+
+mixin_squared_neoforge = { module = "com.github.bawnorton.mixinsquared:mixinsquared-neoforge", version.ref = "mixinsquared" }
+
+accessories_neoforge = { module = "io.wispforest:accessories-neoforge", version.ref = "accessories"}
+
+curios = { module = "top.theillusivec4.curios:curios-neoforge", version.ref = "curios" }
 
 [bundles]
 
