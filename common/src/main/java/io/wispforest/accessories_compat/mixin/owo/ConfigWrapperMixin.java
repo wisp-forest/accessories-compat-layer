@@ -1,4 +1,4 @@
-package io.wispforest.accessories_compat.trinkets.mixin.owo;
+package io.wispforest.accessories_compat.mixin.owo;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

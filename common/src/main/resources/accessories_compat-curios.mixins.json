@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "package": "io.wispforest.accessories_compat.curios.mixin",
+  "plugin": "io.wispforest.accessories_compat.curios.mixin.CuriosCompatMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "accessor.CuriosImplMixinHooksAccessor",
+    "accessor.ItemizedCurioCapabilityAccessor",
+    "accessor.SlotTypeBuilderAccessor",
+    "accessories.AccessoriesCapabilityImplMixin",
+    "accessories.AccessoriesContainerImplAccessor",
+    "accessories.SlotAttributeMixin",
+    "client.ClientLanguageMixin",
+    "client.CuriosClientProxyMixin",
+    "client.CuriosRendererRegistryMixin",
+    "client.CuriosClientPayloadHandlerMixin",
+    "client.CuriosButtonMixin",
+    "client.CuriosClientPayloadHandlerMixin",
+    "CurioCanUnequipEventMixin",
+    "CurioInventoryCapabilityMixin",
+    "CurioInventoryMixin",
+    "CurioItemHandlerMixin",
+    "CuriosEntityManagerMixin",
+    "CuriosImplMixinHooksMixin",
+    "CuriosMixin",
+    "CuriosServerPayloadHandlerMixin",
+    "CuriosSlotManagerMixin",
+    "IconHelperMixin",
+    "RegisterCapabilitiesEventMixin",
+    "SlotAttributeMixin",
+    "SlotContextMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

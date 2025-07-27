@@ -1,7 +1,5 @@
 package io.wispforest.accessories_compat.trinkets.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.datafixers.util.Function3;
@@ -20,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.intellij.lang.annotations.Identifier;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -44,7 +41,7 @@ public abstract class TrinketsAPIMixin {
     // Register trinkets into accessories
     @Inject(method = "registerTrinket", at = @At("TAIL"), remap = false)
     private static void registerTrinketAsAccessory(Item item, Trinket trinket, CallbackInfo ci) {
-        AccessoriesAPI.registerAccessory(item, new WrappedTrinket(trinket));
+        AccessoriesAPI.registerAccessory(item, new AccessoryFromTrinket(trinket));
     }
 
     // Get accessories if trinket does not exist
@@ -54,7 +51,7 @@ public abstract class TrinketsAPIMixin {
             var accessory = AccessoriesAPI.getAccessory(item);
 
             if (accessory != null) {
-                cir.setReturnValue(new WrappedAccessory(accessory));
+                cir.setReturnValue(new TrinketFromAccessory(accessory));
             }
         }
     }
@@ -139,6 +136,6 @@ public abstract class TrinketsAPIMixin {
     // Set default trinket to accessories default
     @Inject(method = "<clinit>", at = @At(value = "TAIL"), remap = false)
     private static void adjustDefaultTrinket(CallbackInfo ci) {
-        DEFAULT_TRINKET = new WrappedAccessory(AccessoriesAPI.defaultAccessory());
+        DEFAULT_TRINKET = new TrinketFromAccessory(AccessoriesAPI.defaultAccessory());
     }
 }

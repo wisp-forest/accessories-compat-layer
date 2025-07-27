@@ -21,7 +21,7 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
     compileClasspath { extendsFrom(common) }
     runtimeClasspath { extendsFrom(common) }
-    "developmentFabric" { extendsFrom(common) }
+    //"developmentFabric" { extendsFrom(common) }
 }
 
 repositories {
@@ -40,6 +40,7 @@ repositories {
     // EMI Item Viewer
     maven("https://maven.terraformersmc.com/releases")
     // --
+
     maven("https://maven.ladysnake.org/releases")
 
     // Mixin Squard

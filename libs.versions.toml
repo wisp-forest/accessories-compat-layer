@@ -6,7 +6,7 @@ java = "21"
 minecraft = "1.21.1"
 minecraft_base = "1.21.1"
 
-neoforge_minecraft_range = "[1.21.1,1.21.1)"
+neoforge_minecraft_range = "[1.21.1,)"
 fabric_minecraft_range = "~1.21.1"
 
 # https://parchmentmc.org/docs/getting-started
@@ -51,13 +51,12 @@ owo_fabric   = "0.12.15.4+1.21"
 owo_neoforge = "0.12.15.1-beta.6+1.21"
 
 owo_fabric_range   = ">=0.12.15.4+1.21"
-owo_neoforge_range = "[0.12.15.4+1.21,)"
+owo_neoforge_range = "[0.12.15.1-beta.6+1.21,)"
 
 jankson = "1.2.2"
 
 # Item Viewer Info 
 rei      = "16.0.799"
-arch_api = "13.0.8"               # https://modrinth.com/mod/architectury-api/versions
 
 emi = "1.1.18+1.21.1"
 

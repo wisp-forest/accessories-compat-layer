@@ -9,25 +9,22 @@ import dev.emi.trinkets.data.EntitySlotLoader;
 import dev.emi.trinkets.data.SlotLoader;
 import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.attributes.AccessoryAttributeBuilder;
-import io.wispforest.accessories.data.SlotTypeLoader;
 import io.wispforest.accessories_compat.AccessoriesCompatInit;
 import io.wispforest.accessories_compat.api.EntityBindingModifier;
 import io.wispforest.accessories_compat.api.ModCompatibilityModule;
 import io.wispforest.accessories_compat.api.ReloadListenerRegisterCallback;
 import io.wispforest.accessories_compat.api.tags.SlotTypesModifier;
-import io.wispforest.accessories_compat.trinkets.mixin.accessor.SlotDataAccessor;
 import io.wispforest.accessories_compat.trinkets.mixin.accessor.SlotLoaderAccessor;
 import io.wispforest.accessories_compat.trinkets.utils.SlotIdRedirect;
 import io.wispforest.accessories_compat.trinkets.wrapper.TrinketsWrappingUtils;
-import io.wispforest.accessories_compat.trinkets.wrapper.WrappedAccessory;
-import io.wispforest.accessories_compat.trinkets.wrapper.WrappedTrinket;
+import io.wispforest.accessories_compat.trinkets.wrapper.TrinketFromAccessory;
+import io.wispforest.accessories_compat.trinkets.wrapper.AccessoryFromTrinket;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
 
@@ -51,7 +48,7 @@ public class TrinketsCompat extends ModCompatibilityModule {
     public void addEntityBindings(EntityBindingModifier modifier) {
         var redirects = SlotIdRedirect.getMap(AccessoriesCompatInit.CONFIG.slotIdRedirects());
 
-        for (var entry : TrinketsWrappingUtils.slotInfo.entrySet()) {
+        for (var entry : TrinketsWrappingUtils.CURRENT_SLOT_INFO.entrySet()) {
             var addition = modifier.addTo(entry.getKey());
 
             var groupedSlots = entry.getValue();
@@ -70,6 +67,8 @@ public class TrinketsCompat extends ModCompatibilityModule {
                 }
             }
         }
+
+        TrinketsWrappingUtils.CURRENT_SLOT_INFO.clear();
     }
 
     private final ResourceLocation EMPTY_TEXTURE = ResourceLocation.fromNamespaceAndPath(TrinketsMain.MOD_ID, "gui/slots/empty.png");
@@ -200,13 +199,13 @@ public class TrinketsCompat extends ModCompatibilityModule {
 
     @Override
     public boolean skipOnEquipCheck(ItemStack stack, Accessory accessory) {
-        return accessory instanceof WrappedTrinket;
+        return accessory instanceof AccessoryFromTrinket;
     }
 
     @Override
     public boolean skipDefaultRenderer(Item item) {
         var trinket = TrinketsApi.getTrinket(item);
 
-        return !(trinket == TrinketsApi.getDefaultTrinket() || trinket instanceof WrappedAccessory);
+        return !(trinket == TrinketsApi.getDefaultTrinket() || trinket instanceof TrinketFromAccessory);
     }
 }

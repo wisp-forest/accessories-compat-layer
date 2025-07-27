@@ -14,29 +14,7 @@ import java.util.Set;
 public class TrinketsCompatMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if(LoaderPlatformUtils.INSTANCE.isModLoaded("trinkets")) {
-            if(mixinClassName.contains("DataLoaderBase")) {
-                return testForClass("io/wispforest/accessories/fabric/AccessoriesFabric");
-            }
-
-            if(mixinClassName.contains("AccessoriesForgeMixin")) {
-                return testForClass(targetClassName);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean testForClass(String targetClassName)  {
-        try {
-            MixinService.getService().getBytecodeProvider().getClassNode(targetClassName);
-
-            return true;
-        } catch (IOException | ClassNotFoundException e) {
-            return false;
-        }
+        return LoaderPlatformUtils.INSTANCE.isModLoaded("trinkets");
     }
 
     @Override public void onLoad(String mixinPackage) {}

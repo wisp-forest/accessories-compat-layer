@@ -71,12 +71,14 @@ dependencies {
     fabricModule(this::modCompileOnlyApi, "fabric-api-base")
     // --
 
-    modImplementation(libs.accessories.common)
+    modCompileOnly(libs.accessories.common)
 
     modCompileOnly(libs.trinkets)
     fabricModule(this::modCompileOnly, "fabric-resource-loader-v0", "fabric-events-interaction-v0")
 
     modCompileOnly(libs.curios)
+    compileOnly("net.neoforged:bus:8.0.5")
+    modCompileOnly(libs.neoforge)
 
     annotationProcessor(libs.mixin.squared.common)
     implementation(libs.mixin.squared.common)

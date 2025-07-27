@@ -1,4 +1,5 @@
 import helpers.Utils
+import java.util.function.BiConsumer
 
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -20,7 +21,7 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
     compileClasspath { extendsFrom(common) }
     runtimeClasspath { extendsFrom(common) }
-    "developmentNeoForge" { extendsFrom(common) }
+    //"developmentNeoForge" { extendsFrom(common) }
 }
 
 repositories {
@@ -48,6 +49,8 @@ repositories {
     maven("https://maven.terraformersmc.com/releases")
     // --
 
+    maven("https://maven.ladysnake.org/releases")
+
     maven("https://maven.theillusivec4.top/")
 
     // Mixin Squard
@@ -55,6 +58,16 @@ repositories {
 }
 
 dependencies {
+    fun fabricModule(dependencyMethod: BiConsumer<Dependency, Action<Dependency>>, vararg moduleNames: String, action: Action<Dependency>? = null) {
+        for (moduleName in moduleNames) {
+            dependencyMethod.accept(fabricApi.module(moduleName, libs.versions.fabric.api.asProvider().get())){
+                (this as ModuleDependency).exclude(group = "fabric-api", module = "")
+
+                action?.execute(this)
+            }
+        }
+    }
+
     "common"(project(":common", "namedElements")) { this.setTransitive(false) }
     "shadowCommon"(project(":common", "transformProductionNeoForge")) { this.setTransitive(false) }
 
@@ -69,6 +82,9 @@ dependencies {
     forgeRuntimeLibrary(libs.endec.jankson)
     forgeRuntimeLibrary(libs.jankson)
     // --
+
+    modCompileOnly(libs.trinkets)
+    fabricModule(this::modCompileOnly, "fabric-resource-loader-v0", "fabric-events-interaction-v0")
 
     modImplementation(libs.curios)
 

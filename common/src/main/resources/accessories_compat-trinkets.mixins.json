@@ -9,7 +9,6 @@
     "accessor.SlotDataAccessor",
     "accessor.SlotLoaderAccessor",
     "accessories.SlotGroupLoaderMixin",
-    "owo.ConfigWrapperMixin",
     "events.TrinketDropCallbackMixin",
     "events.TrinketEquipCallbackMixin",
     "events.TrinketUnequipCallbackMixin",

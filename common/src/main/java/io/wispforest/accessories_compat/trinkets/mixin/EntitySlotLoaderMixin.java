@@ -27,7 +27,7 @@ public abstract class EntitySlotLoaderMixin {
         remap = false
     )
     private static Iterator<EntityType<?>> passEmptyIterator(Set<EntityType<?>> instance, Operation<Iterator<EntityType<?>>> original, @Local(argsOnly = true, ordinal = 2) Map<String, Set<String>> groups) {
-        var slotInfo = TrinketsWrappingUtils.slotInfo;
+        var slotInfo = TrinketsWrappingUtils.CURRENT_SLOT_INFO;
 
         for (EntityType<?> type : instance) {
             slotInfo.put(type, ImmutableMap.copyOf(groups));

@@ -2,6 +2,7 @@ package io.wispforest.accessories_compat;
 
 import com.google.common.reflect.Reflection;
 import io.wispforest.accessories_compat.common.AccessoriesCompatConfig;
+import io.wispforest.accessories_compat.curios.CuriosCompat;
 import io.wispforest.accessories_compat.trinkets.TrinketsCompat;
 import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,6 +21,10 @@ public class AccessoriesCompatInit {
 
         if (LoaderPlatformUtils.INSTANCE.isModLoaded("trinkets")) {
             Reflection.initialize(TrinketsCompat.class);
+        }
+
+        if (LoaderPlatformUtils.INSTANCE.isModLoaded("curios")) {
+            Reflection.initialize(CuriosCompat.class);
         }
     }
 

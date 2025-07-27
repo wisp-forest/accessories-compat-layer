@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "provides": [
-    "tclayer"
+    "tclayer",
+    "cclayer"
   ],
   "version": "${mod_version}",
   "name": "${mod_name}",
@@ -25,12 +26,16 @@
     ],
     "client": [
       "io.wispforest.accessories_compat.fabric.client.AccessoriesCompatClientFabricInit"
+    ],
+    "mixinsquared": [
+      "io.wispforest.accessories_compat.curios.CuriosCompatMixinCanceller"
     ]
   },
   "mixins": [
     "${mod_id}-fabric.mixins.json",
     "${mod_id}-common.mixins.json",
-    "${mod_id}-trinkets.mixins.json"
+    "${mod_id}-trinkets.mixins.json",
+    "${mod_id}-curios.mixins.json"
   ],
   "accessWidener": "${mod_id}-fabric.accesswidener",
   "depends": {

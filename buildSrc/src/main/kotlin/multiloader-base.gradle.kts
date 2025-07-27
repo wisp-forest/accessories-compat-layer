@@ -1,6 +1,8 @@
+import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.main
 import helpers.Utils
 import helpers.UtilsJava
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.internal.declarativedsl.parsing.main
 
 val libs get() = the<LibrariesForLibs>()
 
@@ -15,6 +17,7 @@ plugins {
 
 architectury {
     minecraft = libs.versions.minecraft.asProvider().get()
+    compileOnly()
 }
 
 base {
@@ -26,6 +29,24 @@ group = rootProject.property("mod_group")!!
 
 loom {
     silentMojangMappingsLicense()
+
+    if (project.path != ":common") {
+        mods {
+            try {
+                named("main") {
+                    this@named.sourceSet("main", project)
+                    this@named.sourceSet("main", project(":common"))
+                }
+            } catch (e: UnknownDomainObjectException) {
+                register("main") {
+                    this@register.sourceSet("main", project)
+                    this@register.sourceSet("main", project(":common"))
+                }
+            }
+
+
+        }
+    }
 }
 
 repositories {

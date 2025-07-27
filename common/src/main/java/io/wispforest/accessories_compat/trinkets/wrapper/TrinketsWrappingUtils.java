@@ -29,7 +29,7 @@ import java.util.*;
 
 public class TrinketsWrappingUtils {
 
-    public static final Map<EntityType<?>, Map<String, Set<String>>> slotInfo = new HashMap<>();
+    public static final Map<EntityType<?>, Map<String, Set<String>>> CURRENT_SLOT_INFO = new HashMap<>();
 
     public static final TagKey<Item> ALL_TRINKET_ITEMS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("tclayer", "all_trinket_items"));
 

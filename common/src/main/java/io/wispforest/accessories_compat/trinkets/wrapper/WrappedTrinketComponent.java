@@ -32,7 +32,7 @@ public record WrappedTrinketComponent(LivingEntity entity) implements TrinketCom
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AccessoriesCapability capability() {
-        return entity.accessoriesCapability();
+        return AccessoriesCapability.get(entity);
     }
 
     @Override
@@ -56,7 +56,7 @@ public record WrappedTrinketComponent(LivingEntity entity) implements TrinketCom
                     LOGGER.warn("Unable to get some value leading to an error, here comes the dumping data!");
                     LOGGER.warn("Entity: {}", this.entity());
                     LOGGER.warn("Entity Slots: {}", EntitySlotLoader.getEntitySlots(this.entity()));
-                    LOGGER.warn("Current Containers: {}", this.entity().accessoriesCapability().getContainers());
+                    LOGGER.warn("Current Containers: {}", capability().getContainers());
                     LOGGER.warn("More Info: ({})", additionalMsg);
                 });
     }

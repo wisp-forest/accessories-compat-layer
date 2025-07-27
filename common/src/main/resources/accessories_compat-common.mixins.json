@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "io.wispforest.accessories_compat.mixin",
+  "plugin": "io.wispforest.accessories_compat.mixin.AccessoriesCompatMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "mixins": [
@@ -11,7 +12,8 @@
     "DataLoaderBaseMixin",
     "EntitySlotLoaderMixin",
     "SlotTypeLoaderMixin",
-    "TagGroupLoaderMixin"
+    "TagGroupLoaderMixin",
+    "owo.ConfigWrapperMixin"
   ],
   "client": [
     "client.AccessoriesRendererRegistryMixin"

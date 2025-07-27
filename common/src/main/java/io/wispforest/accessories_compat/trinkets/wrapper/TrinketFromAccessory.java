@@ -14,13 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
-public class WrappedAccessory implements Trinket {
-
-    public final Accessory accessory;
-
-    public WrappedAccessory(Accessory accessory){
-        this.accessory = accessory;
-    }
+public record TrinketFromAccessory(Accessory accessory) implements Trinket {
 
     @Override
     public void tick(ItemStack stack, SlotReference ref, LivingEntity entity) {
@@ -88,7 +82,7 @@ public class WrappedAccessory implements Trinket {
 
         var damageSource = entity.getLastDamageSource();
 
-        if(damageSource == null) damageSource = entity.level().damageSources().generic();
+        if (damageSource == null) damageSource = entity.level().damageSources().generic();
 
         return TrinketsWrappingUtils.convertDropRule(accessory.getDropRule(stack, reference, damageSource));
     }
@@ -115,7 +109,7 @@ public class WrappedAccessory implements Trinket {
 
         var data = accessory.getEquipSound(stack, reference);
 
-        if(data == null) return null;
+        if (data == null) return null;
 
         return data.event();
     }
