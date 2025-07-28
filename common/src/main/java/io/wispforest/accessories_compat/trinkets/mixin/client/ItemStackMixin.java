@@ -1,4 +1,4 @@
-package io.wispforest.accessories_compat.trinkets.mixin;
+package io.wispforest.accessories_compat.trinkets.mixin.client;
 
 import com.bawnorton.mixinsquared.TargetHandler;
 import net.minecraft.world.item.ItemStack;

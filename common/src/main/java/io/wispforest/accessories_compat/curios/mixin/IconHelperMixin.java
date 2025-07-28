@@ -19,7 +19,7 @@ public abstract class IconHelperMixin {
      */
     @Overwrite
     public ResourceLocation getIcon(String identifier) {
-        return Optional.ofNullable(SlotTypeLoader.INSTANCE.getSlotTypes(true).get(CuriosConversionUtils.slotConvertSlotToA(identifier)))
+        return Optional.ofNullable(SlotTypeLoader.INSTANCE.getSlotTypes(true).get(CuriosConversionUtils.slotConvertToA(identifier)))
             .map(SlotType::icon)
             .orElse(ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID, "slot/empty_curio_slot"));
     }

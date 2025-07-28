@@ -3,6 +3,7 @@ package io.wispforest.accessories_compat.curios.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.wispforest.accessories.api.AccessoriesAPI;
+import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.data.SlotTypeLoader;
 import io.wispforest.accessories_compat.curios.AccessoriesEventHooks;
 import io.wispforest.accessories_compat.curios.mixin.accessor.CuriosImplMixinHooksAccessor;
@@ -50,11 +51,12 @@ public abstract class CuriosMixin {
 
     @WrapOperation(method = "lambda$registerCaps$1", at = @At(value = "NEW", target = "(Lnet/minecraft/world/entity/LivingEntity;)Ltop/theillusivec4/curios/common/capability/CurioInventoryCapability;"))
     private static CurioInventoryCapability useCuriosApiToCreateInvCap(LivingEntity livingEntity, Operation<CurioInventoryCapability> original) {
-        return (CurioInventoryCapability) CuriosApi.getCuriosInventory(livingEntity).orElse(null);
+        var capability = AccessoriesCapability.get(livingEntity);
+        return capability != null ? original.call(livingEntity) : null;
     }
 
     @WrapOperation(method = "registerCaps", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/capabilities/RegisterCapabilitiesEvent;registerItem(Lnet/neoforged/neoforge/capabilities/ItemCapability;Lnet/neoforged/neoforge/capabilities/ICapabilityProvider;[Lnet/minecraft/world/level/ItemLike;)V"))
-    private <T, C> void test(RegisterCapabilitiesEvent instance, ItemCapability<T, C> capability, ICapabilityProvider<ItemStack, C, T> provider, ItemLike[] items, Operation<Void> original) {
+    private <T, C> void registerProvidersAsAccessory(RegisterCapabilitiesEvent instance, ItemCapability<T, C> capability, ICapabilityProvider<ItemStack, C, T> provider, ItemLike[] items, Operation<Void> original) {
         if (CuriosConversionUtils.BASE_PROVIDER == null) {
             CuriosConversionUtils.BASE_PROVIDER = (ICapabilityProvider<ItemStack, Void, top.theillusivec4.curios.api.type.capability.ICurio>) provider;
         }
@@ -84,7 +86,7 @@ public abstract class CuriosMixin {
 
         SlotTypeLoader.INSTANCE.getSlotTypes(false).values().forEach(slotType -> {
             CuriosApi.getSlotHelper().addSlotType(new AccessoriesBasedCurioSlot(slotType));
-            slotIds.add(CuriosConversionUtils.slotConvertSlotToC(slotType.name()));
+            slotIds.add(CuriosConversionUtils.slotConvertToC(slotType.name()));
         });
         CurioArgumentType.slotIds = slotIds;
     }

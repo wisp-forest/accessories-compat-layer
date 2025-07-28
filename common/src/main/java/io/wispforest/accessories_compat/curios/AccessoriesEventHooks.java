@@ -46,7 +46,7 @@ public class AccessoriesEventHooks {
             if (changedContainers.isEmpty()) return;
 
             var convertedSlots = changedContainers.keySet().stream()
-                    .map(container -> CuriosConversionUtils.slotConvertSlotToC(container.getSlotName()))
+                    .map(container -> CuriosConversionUtils.slotConvertToC(container.getSlotName()))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
 
             NeoForge.EVENT_BUS.post(new SlotModifiersUpdatedEvent(livingEntity, convertedSlots));

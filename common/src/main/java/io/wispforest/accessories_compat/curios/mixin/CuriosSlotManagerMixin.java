@@ -3,11 +3,13 @@ package io.wispforest.accessories_compat.curios.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.wispforest.accessories.data.SlotTypeLoader;
+import io.wispforest.accessories_compat.curios.wrapper.AccessoriesBasedCurioSlot;
 import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,6 +26,8 @@ import java.util.Set;
 @Mixin(CuriosSlotManager.class)
 public abstract class CuriosSlotManagerMixin {
 
+    @Shadow public abstract Map<String, ISlotType> getSlots();
+
     @WrapOperation(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", ordinal = 4)
@@ -31,7 +35,6 @@ public abstract class CuriosSlotManagerMixin {
     private <K, V> Set<Map.Entry<K, V>> saveSlotBuildersForLater(Map<String, SlotType.Builder> instance, Operation<Set<Map.Entry<K, V>>> original) {
         CuriosConversionUtils.CURRENT_SLOT_BUILDERS.clear();
         CuriosConversionUtils.CURRENT_SLOT_BUILDERS.putAll(instance);
-
 
         return original.call(Map.of());
     }
@@ -52,11 +55,24 @@ public abstract class CuriosSlotManagerMixin {
         cir.setReturnValue(CuriosConversionUtils.slotsConvertToC(SlotTypeLoader.INSTANCE.getSlotTypes(isClientSide())));
     }
 
+    @Inject(method = "getSlot", at = @At("HEAD"), cancellable = true, remap = false)
+    private void getSlotsFromMethod(String id, CallbackInfoReturnable<Optional<ISlotType>> cir) {
+        cir.setReturnValue(
+            Optional.ofNullable(
+                SlotTypeLoader.INSTANCE.getSlotTypes(this.isClientSide())
+                    .get(CuriosConversionUtils.slotConvertToA(id))
+            ).map(AccessoriesBasedCurioSlot::new)
+        );
+    }
+
     @Inject(method = "getIcons", at = @At("HEAD"), cancellable = true, remap = false)
     private void getConvertedIconsInstead(CallbackInfoReturnable<Map<String, ResourceLocation>> cir) {
-        cir.setReturnValue(CuriosConversionUtils.convertToC(
-            SlotTypeLoader.INSTANCE.getSlotTypes(isClientSide()),
-            io.wispforest.accessories.api.slot.SlotType::icon));
+        cir.setReturnValue(
+            CuriosConversionUtils.convertToC(ResourceLocation.class,
+                SlotTypeLoader.INSTANCE.getSlotTypes(isClientSide()),
+                io.wispforest.accessories.api.slot.SlotType::icon,
+                (slotType, location) -> slotType.icon().equals(location))
+        );
     }
 
     @Inject(method = "getIcon", at = @At("HEAD"), cancellable = true)
@@ -64,7 +80,7 @@ public abstract class CuriosSlotManagerMixin {
         cir.setReturnValue(
             Optional.ofNullable(
                 SlotTypeLoader.INSTANCE.getSlotTypes(isClientSide())
-                .get(CuriosConversionUtils.slotConvertSlotToA(id))
+                .get(CuriosConversionUtils.slotConvertToA(id))
                 .icon()
             ).orElse(ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID, "slot/empty_curio_slot"))
         );

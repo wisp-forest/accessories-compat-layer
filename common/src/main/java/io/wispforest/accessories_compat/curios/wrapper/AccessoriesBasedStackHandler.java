@@ -183,7 +183,7 @@ public record AccessoriesBasedStackHandler(AccessoriesContainerImpl container) i
 
     @Override
     public String getIdentifier() {
-        return CuriosConversionUtils.slotConvertSlotToC(this.container.getSlotName());
+        return CuriosConversionUtils.slotConvertToC(this.container.getSlotName());
     }
 
     @Override

@@ -21,7 +21,7 @@ public abstract class CuriosServerPayloadHandlerMixin {
     private static void callIntoAccessoriesCosmeticToggle(IPayloadContext ctx, CPacketToggleRender data, CallbackInfo ci) {
         Player player = ctx.player();
 
-        var packet = new SyncCosmeticToggle(ctx.player().getId(), CuriosConversionUtils.slotConvertSlotToA(data.identifier()), data.index());
+        var packet = new SyncCosmeticToggle(ctx.player().getId(), CuriosConversionUtils.slotConvertToA(data.identifier()), data.index());
 
         SyncCosmeticToggle.handlePacket(packet, player);
 

@@ -43,5 +43,12 @@
     "fabric-api": "${fabric_api_version_range}",
     "minecraft": "${fabric_minecraft_version_range}",
     "owo": "${owo_fabric_version_range}"
+  },
+  "recommends": {
+    "trinkets": "*"
+  },
+  "#COMMENT_breaks": {
+    "tclayer": "*",
+    "cclayer": "*"
   }
 }

@@ -18,7 +18,7 @@ public record AccessoriesBasedCurioSlot(SlotType slotType) implements ISlotType 
 
     @Override
     public String getIdentifier() {
-        return CuriosConversionUtils.slotConvertSlotToC(this.slotType.name());
+        return CuriosConversionUtils.slotConvertToC(this.slotType.name());
     }
 
     @Override

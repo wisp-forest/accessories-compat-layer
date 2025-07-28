@@ -46,11 +46,19 @@ public abstract class EntitySlotLoaderMixin {
     }
 
     @Inject(method = {
-        "sync*"
+        "sync(Lnet/minecraft/server/level/ServerPlayer;)V"
     }, at = @At("HEAD"), cancellable = true)
-    private static void accessories$preventMethodInvocation(CallbackInfo ci) {
+    private static void accessories$preventMethodInvocation1(CallbackInfo ci) {
         ci.cancel();
     }
+
+    @Inject(method = {
+        "sync(Ljava/util/List;)V"
+    }, at = @At("HEAD"), cancellable = true, remap = false)
+    private static void accessories$preventMethodInvocation2(CallbackInfo ci) {
+        ci.cancel();
+    }
+
 
     /**
      * @author blodhgarm

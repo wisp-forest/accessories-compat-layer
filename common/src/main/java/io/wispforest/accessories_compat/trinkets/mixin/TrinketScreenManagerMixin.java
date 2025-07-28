@@ -1,6 +1,5 @@
 package io.wispforest.accessories_compat.trinkets.mixin;
 
-import dev.emi.trinkets.TrinketScreen;
 import dev.emi.trinkets.TrinketScreenManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +14,7 @@ public abstract class TrinketScreenManagerMixin {
         "drawGroup",
         "drawActiveGroup",
         "drawExtraGroups"
-    }, at = @At("HEAD"), cancellable = true)
+    }, at = @At("HEAD"), cancellable = true, remap = false)
     private static void accessories$preventMethodInvocation1(CallbackInfo ci) {
         ci.cancel();
     }

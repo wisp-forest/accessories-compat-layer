@@ -30,6 +30,9 @@ public abstract class CurioInventoryCapabilityMixin implements CurioInventoryCap
 
     @Shadow @Final private CurioInventory curioInventory;
     @Shadow @Final private LivingEntity livingEntity;
+
+    @Shadow public abstract void reset();
+
     @Unique
     private AccessoriesCapabilityImpl capability = null;
 
@@ -40,15 +43,26 @@ public abstract class CurioInventoryCapabilityMixin implements CurioInventoryCap
 
     @ModifyExpressionValue(method = "<init>", at = @At(value = "FIELD", target = "Ltop/theillusivec4/curios/common/capability/CurioInventory;markDeserialized:Z"))
     private boolean initCapabilityFromEntity(boolean original, @Local(argsOnly = true) LivingEntity livingEntity) {
-        var capability = AccessoriesCapability.get(livingEntity);
+        if (CurioInventoryCapabilityExtension.CURRENTLY_CONVERTING.contains(livingEntity)) {
+            return false;
+        } else {
+            var capability = AccessoriesCapability.get(livingEntity);
 
-        if (capability == null) {
-            throw new NullPointerException("Unable to create the CurioInventoryCapability due to the given AccessoriesCapability being null for the given entity! [Entity: " + livingEntity + "]");
+            if (capability == null) {
+                throw new NullPointerException("Unable to create the CurioInventoryCapability due to the given AccessoriesCapability being null for the given entity! [Entity: " + livingEntity + "]");
+            }
+
+            this.capability = (AccessoriesCapabilityImpl) capability;
+
+            return true;
         }
+    }
 
-        this.capability = (AccessoriesCapabilityImpl) capability;
+    @Override
+    public void capability(AccessoriesCapabilityImpl capability) {
+        this.capability = capability;
 
-        return true;
+        this.reset();
     }
 
     /**

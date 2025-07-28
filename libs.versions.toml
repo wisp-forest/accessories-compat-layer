@@ -28,8 +28,8 @@ neoforge_loader_range="[4,)"
 
 accessories="1.1.0-beta.43+1.21.1"
 
-accessories_range_fabric=">=1.1.0-beta.43+1.21.1"
-accessories_range_neoforge="[1.1.0-beta.43+1.21.1,)"
+accessories_fabric_range=">=1.1.0-beta.43+1.21.1"
+accessories_neoforge_range="[1.1.0-beta.43+1.21.1,)"
 
 trinkets="3.10.0"
 

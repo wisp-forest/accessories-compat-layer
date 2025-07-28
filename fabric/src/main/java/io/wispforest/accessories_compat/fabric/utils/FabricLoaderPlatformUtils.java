@@ -1,6 +1,7 @@
 package io.wispforest.accessories_compat.fabric.utils;
 
 import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
 public final class FabricLoaderPlatformUtils implements LoaderPlatformUtils {
@@ -18,5 +19,10 @@ public final class FabricLoaderPlatformUtils implements LoaderPlatformUtils {
     @Override
     public boolean isModLoaded(String modid) {
         return FabricLoader.getInstance().isModLoaded(modid);
+    }
+
+    @Override
+    public boolean isClientOnlyEnv() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 }

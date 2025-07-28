@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class AccessoriesCompatInit {
 
-    public static final String MODID = "accessories_compat";
+    public static final String MODID = "accessories_compat_layer";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
     public static final AccessoriesCompatConfig CONFIG = AccessoriesCompatConfig.createAndLoad();

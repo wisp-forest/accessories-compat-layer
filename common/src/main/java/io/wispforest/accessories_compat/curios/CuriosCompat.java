@@ -45,7 +45,7 @@ public class CuriosCompat extends ModCompatibilityModule {
     @Override
     public void registerDataLoaders(ReloadListenerRegisterCallback callback) {
         callback.registerSlotLoader(CuriosSlotManager.SERVER, ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "curios_slot_manager"));
-        callback.registerSlotLoader(CuriosEntityManager.SERVER, ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "curios_entity_manager"));
+        callback.registerEntitySlotLoader(CuriosEntityManager.SERVER, ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "curios_entity_manager"));
     }
 
     @Override
@@ -53,8 +53,8 @@ public class CuriosCompat extends ModCompatibilityModule {
         for (var entry : CuriosConversionUtils.CURRENT_ENTITY_BINDINGS.entrySet()) {
             var addition = modifier.addTo(entry.getKey());
 
-            for (String curiosId : entry.getValue().build().keySet()) {
-                var accessoriesId = CuriosConversionUtils.slotConvertSlotToA(curiosId);
+            for (String curiosId : entry.getValue().buildKeepingLast().keySet()) {
+                var accessoriesId = CuriosConversionUtils.slotConvertToA(curiosId);
 
                 addition.add(accessoriesId);
             }
@@ -68,7 +68,7 @@ public class CuriosCompat extends ModCompatibilityModule {
         CuriosConversionUtils.CURRENT_SLOT_BUILDERS.forEach((curiosId, curiosBuilder) -> {
             var accessor = (SlotTypeBuilderAccessor) curiosBuilder;
 
-            var accessoriesId = CuriosConversionUtils.slotConvertSlotToA(curiosId);
+            var accessoriesId = CuriosConversionUtils.slotConvertToA(curiosId);
 
             SlotTypeLoader.SlotBuilder builder = modifier.getBuilder(accessoriesId);
             Integer slotsCurrentSize = null;
@@ -109,12 +109,12 @@ public class CuriosCompat extends ModCompatibilityModule {
 
     @Override
     public SequencedSet<ResourceLocation> toAccessoriesTag(ResourceLocation moduleSlotTag) {
-        return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("accessories", CuriosConversionUtils.slotConvertSlotToA(moduleSlotTag.getPath()))));
+        return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("accessories", CuriosConversionUtils.slotConvertToA(moduleSlotTag.getPath()))));
     }
 
     @Override
     public SequencedSet<ResourceLocation> fromAccessoriesTag(ResourceLocation accessoriesSlotTag) {
-        return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("curios", CuriosConversionUtils.slotConvertSlotToC(accessoriesSlotTag.getPath()))));
+        return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("curios", CuriosConversionUtils.slotConvertToC(accessoriesSlotTag.getPath()))));
     }
 
     @Override
@@ -126,7 +126,7 @@ public class CuriosCompat extends ModCompatibilityModule {
         for (CurioAttributeModifiers.Entry entry : stack.getOrDefault(CuriosRegistry.CURIO_ATTRIBUTE_MODIFIERS.get(), CurioAttributeModifiers.EMPTY).modifiers()) {
             var targetSlot = entry.slot();
 
-            if (targetSlot.equals(CuriosConversionUtils.slotConvertSlotToC(accessoriesSlotName)) || targetSlot.isBlank()) {
+            if (targetSlot.equals(CuriosConversionUtils.slotConvertToC(accessoriesSlotName)) || targetSlot.isBlank()) {
                 var rl = entry.attribute();
 
                 if (rl == null) continue;

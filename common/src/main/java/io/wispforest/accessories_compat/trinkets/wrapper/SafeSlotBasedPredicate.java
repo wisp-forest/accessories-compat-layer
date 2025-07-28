@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Function3;
 import com.mojang.logging.LogUtils;
 import dev.emi.trinkets.api.SlotReference;
 import io.wispforest.accessories.api.slot.EntityBasedPredicate;
+import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,8 +29,13 @@ public final class SafeSlotBasedPredicate implements EntityBasedPredicate {
     public TriState isValid(Level level, @Nullable LivingEntity entity, io.wispforest.accessories.api.slot.SlotType slotType, int slot, ItemStack stack) {
         if(hasErrored) return TriState.DEFAULT;
 
+        // Cursed work around due to curios being kind of bad with enforcing information about who and where we are checking against
+        var isClient = level != null
+            ? level.isClientSide()
+            : LoaderPlatformUtils.INSTANCE.isClientOnlyEnv();
+
         try {
-            return this.trinketPredicate.apply(stack, new SlotReference(new EmptyTrinketInventory(entity, slotType, level.isClientSide()), slot), entity);
+            return this.trinketPredicate.apply(stack, new SlotReference(new EmptyTrinketInventory(entity, slotType, isClient), slot), entity);
         } catch (Exception e) {
             this.hasErrored = true;
             LOGGER.warn("Unable to handle Trinket Slot Predicate converted to Accessories Slot Predicate due to fundamental incompatibility, issues may be present with it! [Slot: {}, Predicate ID: {}]", slotType.name(), this.location, e);

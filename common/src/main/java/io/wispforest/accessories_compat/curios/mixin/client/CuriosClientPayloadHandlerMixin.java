@@ -35,7 +35,7 @@ public abstract class CuriosClientPayloadHandlerMixin {
     @Inject(method = "handle(Ltop/theillusivec4/curios/common/network/server/SPacketBreak;Lnet/neoforged/neoforge/network/handling/IPayloadContext;)V", at = @At("HEAD"), remap = false)
     private void callAccessoriesHandling(SPacketBreak data, IPayloadContext ctx, CallbackInfo ci) {
         handle(ctx, () -> {
-            AccessoryBreak.handlePacket(new AccessoryBreak(data.entityId(), CuriosConversionUtils.slotConvertSlotToA(data.curioId()), data.slotId()), ctx.player());
+            AccessoryBreak.handlePacket(new AccessoryBreak(data.entityId(), CuriosConversionUtils.slotConvertToA(data.curioId()), data.slotId()), ctx.player());
         });
     }
 }

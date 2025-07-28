@@ -1,6 +1,7 @@
 package io.wispforest.accessories_compat.neoforge.utils;
 
 import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.LoadingModList;
 
@@ -19,5 +20,10 @@ public final class NeoforgeLoaderPlatformUtils implements LoaderPlatformUtils {
     @Override
     public boolean isModLoaded(String modid) {
         return LoadingModList.get().getModFileById(modid) != null;
+    }
+
+    @Override
+    public boolean isClientOnlyEnv() {
+        return FMLLoader.getDist() == Dist.CLIENT;
     }
 }

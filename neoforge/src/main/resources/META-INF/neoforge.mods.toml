@@ -5,7 +5,7 @@ license = "${mod_license}"
 
 [[mods]]
 modId = "${mod_id}"
-provides = [ "tclayer", "cclayer" ]
+#provides = [ "tclayer", "cclayer" ]
 version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}, ${mod_contributors}"
@@ -15,6 +15,14 @@ ${mod_description}
 '''
 logoFile = "assets/${mod_id}/icon.png"
 displayURL = "${mod_sourcepage}"
+
+[[mods]]
+modId = "tclayer"
+version = "${mod_version}"
+
+[[mods]]
+modId = "cclayer"
+version = "${mod_version}"
 
 [[mixins]]
 config = '${mod_id}-common.mixins.json'
@@ -45,3 +53,17 @@ required = true
 versionRange = "${owo_neoforge_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "curios"
+type = "optional"
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+#[[dependencies.${mod_id}]]
+#modId = "cclayer"
+#type = "incompatible"
+#versionRange = ""
+#ordering = "NONE"
+#side = "BOTH"

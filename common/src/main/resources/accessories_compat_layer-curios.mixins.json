@@ -11,12 +11,6 @@
     "accessories.AccessoriesCapabilityImplMixin",
     "accessories.AccessoriesContainerImplAccessor",
     "accessories.SlotAttributeMixin",
-    "client.ClientLanguageMixin",
-    "client.CuriosClientProxyMixin",
-    "client.CuriosRendererRegistryMixin",
-    "client.CuriosClientPayloadHandlerMixin",
-    "client.CuriosButtonMixin",
-    "client.CuriosClientPayloadHandlerMixin",
     "CurioCanUnequipEventMixin",
     "CurioInventoryCapabilityMixin",
     "CurioInventoryMixin",
@@ -32,6 +26,12 @@
     "SlotContextMixin"
   ],
   "client": [
+    "client.ClientLanguageMixin",
+    "client.CuriosClientProxyMixin",
+    "client.CuriosRendererRegistryMixin",
+    "client.CuriosClientPayloadHandlerMixin",
+    "client.CuriosButtonMixin",
+    "client.CuriosClientPayloadHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

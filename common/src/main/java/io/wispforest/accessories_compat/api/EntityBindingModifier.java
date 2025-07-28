@@ -21,7 +21,7 @@ public interface EntityBindingModifier {
             return new CollectionAddition<>() {
                 @Override
                 public void add(String accessoryType) {
-                    if (slotTypes.containsKey(accessoryType)) {
+                    if (!slotTypes.containsKey(accessoryType)) {
                         LOGGER.warn("Unable to locate the given slot for a given entity binding, it will be skipped: [Name: {}]", accessoryType);
 
                         return;

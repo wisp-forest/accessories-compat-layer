@@ -1,17 +1,14 @@
 package io.wispforest.accessories_compat.curios.wrapper;
 
 import com.google.common.collect.ImmutableMap;
-import io.wispforest.accessories.Accessories;
 import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.DropRule;
 import io.wispforest.accessories.api.data.AccessoriesBaseData;
 import io.wispforest.accessories.api.slot.SlotReference;
 import io.wispforest.accessories_compat.curios.pond.SlotContextExtension;
-import net.minecraft.core.registries.Registries;
+import io.wispforest.accessories_compat.utils.ImmutableDelegatingMap;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.TriState;
@@ -24,12 +21,10 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.common.capability.ItemizedCurioCapability;
 import top.theillusivec4.curios.common.slottype.SlotType;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class CuriosConversionUtils {
 
@@ -48,7 +43,7 @@ public class CuriosConversionUtils {
         // Either use unpacked reference that was used to create slot context from within the cclayer or
         // make one from info on the context
         if (ref == null) {
-            ref = SlotReference.of(slotContext.entity(), slotConvertSlotToA(slotContext.identifier()), slotContext.index());
+            ref = SlotReference.of(slotContext.entity(), slotConvertToA(slotContext.identifier()), slotContext.index());
         }
 
         return ref;
@@ -72,7 +67,7 @@ public class CuriosConversionUtils {
         };
     }
 
-    public static String slotConvertSlotToA(String curiosType) {
+    public static String slotConvertToA(String curiosType) {
         return switch (curiosType) {
             case "curio" -> "any";
             case "head" -> "hat";
@@ -84,7 +79,7 @@ public class CuriosConversionUtils {
         };
     }
 
-    public static String slotConvertSlotToC(String accessoriesType) {
+    public static String slotConvertToC(String accessoriesType) {
         return switch (accessoriesType) {
             case "any" -> "curio";
             case "hat" -> "head";
@@ -136,32 +131,46 @@ public class CuriosConversionUtils {
 
     // TODO: GET MORE PERFORMANCE BY WRAPPING MAP WHEN ENTRIES ARE ITERATED!
     //--
-    public static Map<String, ISlotType> convertToC(@Nullable Collection<io.wispforest.accessories.api.slot.SlotType> slots) {
-        if (slots == null) return Map.of();
-
-        return slots
-                .stream()
-                .collect(Collectors.toMap(slotType -> slotConvertSlotToC(slotType.name()), AccessoriesBasedCurioSlot::new));
-    }
+//    public static Map<String, ISlotType> convertToC(@Nullable Collection<io.wispforest.accessories.api.slot.SlotType> slots) {
+//        if (slots == null) return Map.of();
+//
+//        return slots
+//                .stream()
+//                .collect(Collectors.toMap(slotType -> slotConvertSlotToC(slotType.name()), AccessoriesBasedCurioSlot::new));
+//    }
 
     public static Map<String, ISlotType> slotsConvertToC(@Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots) {
         if (slots == null) return Map.of();
 
-        var map = slots.entrySet()
-                .stream()
-                .collect(Collectors.toMap(entry -> slotConvertSlotToC(entry.getKey()), entry -> new AccessoriesBasedCurioSlot(entry.getValue())));
-
-        return Collections.unmodifiableMap(map);
+        return new ImmutableDelegatingMap<>(
+            "slot_types", String.class, ISlotType.class,
+            slots,
+            CuriosConversionUtils::slotConvertToC,
+            CuriosConversionUtils::slotConvertToA,
+            AccessoriesBasedCurioSlot::new,
+            iSlotType -> iSlotType instanceof AccessoriesBasedCurioSlot(
+                io.wispforest.accessories.api.slot.SlotType slotType
+            ) ? slotType : null
+        );
     }
 
-    public static <T> Map<String, T> convertToC(@Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots, Function<io.wispforest.accessories.api.slot.SlotType, T> conversionFunc) {
+    public static <T> Map<String, T> convertToC(Class<T> clazz, @Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots, Function<io.wispforest.accessories.api.slot.SlotType, T> conversionFunc, BiPredicate<io.wispforest.accessories.api.slot.SlotType, T> finderFunc) {
         if (slots == null) return Map.of();
 
-        var map = slots.entrySet()
-                .stream()
-                .collect(Collectors.toMap(entry -> slotConvertSlotToC(entry.getKey()), entry -> conversionFunc.apply(entry.getValue())));
+        return new ImmutableDelegatingMap<>(
+            "slot_types", String.class, clazz,
+            slots,
+            CuriosConversionUtils::slotConvertToC,
+            CuriosConversionUtils::slotConvertToA,
+            conversionFunc,
+            t -> {
+                for (var value : slots.values()) {
+                    if (finderFunc.test(value, t)) return value;
+                }
 
-        return Collections.unmodifiableMap(map);
+                return null;
+            }
+        );
     }
 
     public static net.fabricmc.fabric.api.util.TriState convertToFabric(@NotNull TriState triState) {

@@ -15,7 +15,6 @@
     "EnchantmentHelperMixin",
     "EntitySlotLoaderMixin",
     "InventoryMenuMixin",
-    "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerListMixin",
     "SlotAttributesMixin",
@@ -29,6 +28,7 @@
     "TrinketsMainMixin"
   ],
   "client": [
+    "client.ItemStackMixin",
     "client.AbstractContainerScreenMixin",
     "client.AccessoriesExperimentalScreenMixin",
     "client.LivingEntityMixin",

@@ -71,7 +71,7 @@ dependencies {
     fabricModule(this::modCompileOnlyApi, "fabric-api-base")
     // --
 
-    modCompileOnly(libs.accessories.common)
+    modCompileOnly(libs.accessories.neoforge)
 
     modCompileOnly(libs.trinkets)
     fabricModule(this::modCompileOnly, "fabric-resource-loader-v0", "fabric-events-interaction-v0")

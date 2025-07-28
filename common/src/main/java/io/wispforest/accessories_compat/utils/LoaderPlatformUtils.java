@@ -25,6 +25,8 @@ public interface LoaderPlatformUtils {
 
     boolean isModLoaded(String modid);
 
+    boolean isClientOnlyEnv();
+
     //--
 
     private static <T> T load(Class<T> clazz) {

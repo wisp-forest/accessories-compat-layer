@@ -9,7 +9,7 @@ public interface SlotContextExtension {
 
     static SlotContext from(SlotReference slotReference) {
         var ctx = new SlotContext(
-            CuriosConversionUtils.slotConvertSlotToC(slotReference.slotName()),
+            CuriosConversionUtils.slotConvertToC(slotReference.slotName()),
             slotReference.entity(),
             slotReference.slot(),
             false,
@@ -34,9 +34,7 @@ public interface SlotContextExtension {
     void slotReference(SlotReference slotReference);
 
     SlotReference slotReference();
-    default SlotType slotType() {
-        return slotReference().type();
-    }
+    SlotType slotType();
 
     boolean isClient();
     void isClient(boolean value);

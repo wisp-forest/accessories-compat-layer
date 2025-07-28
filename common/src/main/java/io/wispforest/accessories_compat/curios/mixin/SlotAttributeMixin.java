@@ -13,6 +13,6 @@ import top.theillusivec4.curios.api.SlotAttribute;
 public abstract class SlotAttributeMixin  {
     @WrapOperation(method = "lambda$getOrCreate$0", at = @At(value = "NEW", target = "(Ljava/lang/Object;)Lnet/minecraft/core/Holder$Direct;"))
     private static Holder.Direct createAccessoriesAttribute(Object value, Operation<Holder.Direct> original, @Local(argsOnly = true, ordinal = 0) String id) {
-        return (Holder.Direct) io.wispforest.accessories.api.attributes.SlotAttribute.getAttributeHolder(CuriosConversionUtils.slotConvertSlotToA(id));
+        return (Holder.Direct) io.wispforest.accessories.api.attributes.SlotAttribute.getAttributeHolder(CuriosConversionUtils.slotConvertToA(id));
     }
 }

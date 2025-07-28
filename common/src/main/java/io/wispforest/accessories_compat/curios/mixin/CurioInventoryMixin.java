@@ -8,11 +8,13 @@ import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.AccessoriesContainer;
 import io.wispforest.accessories.data.SlotTypeLoader;
+import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import io.wispforest.accessories_compat.curios.pond.CurioInventoryCapabilityExtension;
 import io.wispforest.accessories_compat.curios.pond.CurioInventoryExtension;
 import io.wispforest.accessories_compat.curios.wrapper.AccessoriesBasedStackHandler;
 import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
+import io.wispforest.accessories_compat.utils.ImmutableDelegatingMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -36,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Mixin(CurioInventory.class)
 public abstract class CurioInventoryMixin implements CurioInventoryExtension {
@@ -49,23 +50,39 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
 
     @Nullable
     @Unique
+    private AccessoriesCapabilityImpl capability = null;
+
+    @Nullable
+    @Unique
     private AccessoriesHolderImpl holder = null;
 
     public List<ItemStack> getInvalidStacks() {
-        return this.holder != null ? this.holder.invalidStacks : List.of();
+        return capability != null ? holder().invalidStacks : List.of();
     }
 
-    @Inject(method = "init", at = @At("HEAD"), remap = false)
+    @Nullable
+    private AccessoriesHolderImpl holder() {
+        if (capability != null) {
+            if (holder == null) holder = ((AccessoriesHolderImpl) capability.getHolder());
+
+            return holder;
+        }
+
+        return null;
+    }
+
+    @Inject(method = "init", at = @At("HEAD"), remap = false, cancellable = true)
     private void runInitWithAccessoriesInMind(ICuriosItemHandler curiosItemHandler, CallbackInfo ci) {
+        ci.cancel();
+
         if (!(curiosItemHandler instanceof CurioInventoryCapabilityExtension ext)) {
             LOGGER.error("Unable to init a given CurioInventory due to given ICuriosItemHandler not being instance of CurioInventoryCapability!");
 
             return;
         }
 
-        var capability = ext.capability();
-
-        this.holder = ((AccessoriesHolderImpl) capability.getHolder());
+        capability = ext.capability();
+        holder = null;
 
         if (!this.markDeserialized) {
             // TODO: MAY BE A ISSUES ENCOUNTERED WITHIN THE PAST DUE TO ACCESSORIES BEING INIT FIRST LEADING TO DISAPPEARANCE OF STUFF
@@ -75,27 +92,26 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
 
             if (this.deserialized.getBoolean("AccessoriesEncoded") || this.deserialized.isEmpty()) return;
 
-            readData(capability.entity(), capability, this.deserialized.getList("Curios", Tag.TAG_COMPOUND));
+            readData(capability.entity(), capability, holder(), this.deserialized.getList("Curios", Tag.TAG_COMPOUND));
 
             this.deserialized = new CompoundTag();
         }
     }
 
     @Unique
-    private static void readData(LivingEntity livingEntity, AccessoriesCapability capability, ListTag data) {
+    private static void readData(LivingEntity livingEntity, AccessoriesCapability capability, AccessoriesHolderImpl holder, ListTag data) {
         for (int i = 0; i < data.size(); i++) {
             var tag = data.getCompound(i);
             var curiosId = tag.getString("Identifier");
 
-            var slotType = SlotTypeLoader.getSlotType(livingEntity.level(), CuriosConversionUtils.slotConvertSlotToA(curiosId));
+            var slotType = SlotTypeLoader.getSlotType(livingEntity.level(), CuriosConversionUtils.slotConvertToA(curiosId));
 
             var container = (slotType != null) ? capability.getContainer(slotType) : null;
 
-            ((AccessoriesHolderImpl) capability.getHolder()).invalidStacks
-                .addAll(deserializeNBT_StackHandler(livingEntity, container, tag.getCompound("StacksHandler")));
+            holder.invalidStacks.addAll(deserializeNBT_StackHandler(livingEntity, container, tag.getCompound("StacksHandler")));
         }
 
-        var invalidStacks = ((AccessoriesHolderImpl) capability.getHolder()).invalidStacks;
+        var invalidStacks = holder.invalidStacks;
 
         for (var entryRef : capability.getAllEquipped()) {
             var reference = entryRef.reference();
@@ -160,14 +176,20 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
 
     @Inject(method = "asMap", at = @At("HEAD"), cancellable = true, remap = false)
     private void getMapFromAccessoriesHolder(CallbackInfoReturnable<Map<String, ICurioStacksHandler>> cir) {
-        if (holder == null) {
+        if (capability == null) {
             cir.setReturnValue(Map.of());
         } else {
-            cir.setReturnValue(holder.getSlotContainers().entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                    entry -> CuriosConversionUtils.slotConvertSlotToC(entry.getKey()),
-                    entry -> new AccessoriesBasedStackHandler(entry.getValue())))
+            var holder = holder();
+
+            cir.setReturnValue(
+                new ImmutableDelegatingMap<>(
+                    "containers", String.class, ICurioStacksHandler.class,
+                    holder.getSlotContainers(),
+                    CuriosConversionUtils::slotConvertToC,
+                    CuriosConversionUtils::slotConvertToA,
+                    AccessoriesBasedStackHandler::new,
+                    handler -> (handler instanceof AccessoriesBasedStackHandler(var container)) ? container : null
+                )
             );
         }
     }
