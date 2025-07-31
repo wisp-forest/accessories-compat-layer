@@ -42,10 +42,14 @@
     "fabricloader": "${fabric_loader_version_range}",
     "fabric-api": "${fabric_api_version_range}",
     "minecraft": "${fabric_minecraft_version_range}",
-    "owo": "${owo_fabric_version_range}"
+    "owo": "${owo_fabric_version_range}",
+    "accessories": "${accessories_fabric_version_range}"
   },
   "recommends": {
-    "trinkets": "*"
+    "trinkets": "${trinkets_suggets_version_range}"
+  },
+  "breaks": {
+    "trinkets": "${trinkets_breaks_version_range}"
   },
   "#COMMENT_breaks": {
     "tclayer": "*",

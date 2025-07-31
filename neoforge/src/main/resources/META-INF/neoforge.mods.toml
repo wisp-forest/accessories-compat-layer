@@ -35,29 +35,43 @@ config = '${mod_id}-curios.mixins.json'
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"
-required = true
+type = "required"
 versionRange = "${neoforge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-required = true
+type = "required"
 versionRange = "${neoforge_minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "owo"
-required = true
+type = "required"
 versionRange = "${owo_neoforge_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "accessories"
+type = "required"
+versionRange = "${accessories_neoforge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "curios"
 type = "optional"
-versionRange = "[1,)"
+versionRange = "${curios_suggets_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "curios"
+type = "incompatible"
+versionRange = "${curios_breaks_version_range}"
 ordering = "NONE"
 side = "BOTH"
 

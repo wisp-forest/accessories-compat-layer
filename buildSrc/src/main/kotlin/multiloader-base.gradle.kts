@@ -155,6 +155,10 @@ tasks.processResources {
         "owo_neoforge_version"               to libs.versions.owo.neoforge.asProvider().get(),
         "owo_neoforge_version_range"         to libs.versions.owo.neoforge.range.get(),
         "accessories_neoforge_version_range" to libs.versions.accessories.neoforge.range.get(),
+        "trinkets_suggets_version_range"     to libs.versions.trinkets.suggests.range.get(),
+        "trinkets_breaks_version_range"      to libs.versions.trinkets.breaks.range.get(),
+        "curios_suggets_version_range"       to libs.versions.curios.suggests.range.get(),
+        "curios_breaks_version_range"        to libs.versions.curios.breaks.range.get(),
         "java_version"                       to libs.versions.java.get()
     )
 

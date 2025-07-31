@@ -32,8 +32,12 @@ accessories_fabric_range=">=1.1.0-beta.43+1.21.1"
 accessories_neoforge_range="[1.1.0-beta.43+1.21.1,)"
 
 trinkets="3.10.0"
+trinkets_suggests_range=">=3.10.0"
+trinkets_breaks_range="<3.10.0"
 
 curios="9.5.1+1.21.1"
+curios_suggests_range="[9.5.1+1.21.1,)"
+curios_breaks_range="[,9.5.1+1.21.1)"
 
 # Libs
 
