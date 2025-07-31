@@ -57,7 +57,14 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
     private AccessoriesHolderImpl holder = null;
 
     public List<ItemStack> getInvalidStacks() {
-        return capability != null ? holder().invalidStacks : List.of();
+        if (capability != null) {
+            var holder = holder();
+
+            if (holder != null) return holder.invalidStacks;
+        }
+
+
+        return List.of();
     }
 
     @Nullable
@@ -181,16 +188,18 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
         } else {
             var holder = holder();
 
-            cir.setReturnValue(
-                new ImmutableDelegatingMap<>(
-                    "containers", String.class, ICurioStacksHandler.class,
-                    holder.getSlotContainers(),
-                    CuriosConversionUtils::slotConvertToC,
-                    CuriosConversionUtils::slotConvertToA,
-                    AccessoriesBasedStackHandler::new,
-                    handler -> (handler instanceof AccessoriesBasedStackHandler(var container)) ? container : null
-                )
-            );
+            if (holder != null) {
+                cir.setReturnValue(
+                    new ImmutableDelegatingMap<>(
+                        "containers", String.class, ICurioStacksHandler.class,
+                        holder.getSlotContainers(),
+                        CuriosConversionUtils::slotConvertToC,
+                        CuriosConversionUtils::slotConvertToA,
+                        AccessoriesBasedStackHandler::new,
+                        handler -> (handler instanceof AccessoriesBasedStackHandler(var container)) ? container : null
+                    )
+                );
+            }
         }
     }
 
