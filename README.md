@@ -18,6 +18,21 @@
   </a>
 </h1>
 
-Acts as a wrapper for both Trinkets and Curios to work under Accessories as a Mixin Patch on top of both mods. Designed with support for Connector or Kilt.
+## [WIP] Accessories Compatibility Layer
 
-Requires that both Trinkets and/or Curios is installed alongside such to work properly! 
+Using Accessories as the framework, this mod acts as a wrapper for both Trinkets and Curios, using mixin patches on top of both mods. It is designed with support for a Connector or Kilt, meaning trinkets or curios support will work on fabric or neoforge.
+
+### Requires: 
+- [Accessories](https://modrinth.com/mod/accessories/)
+- [Trinkets](https://modrinth.com/mod/trinkets) and/or [Curios](https://modrinth.com/mod/curios)
+
+### Replaces: 
+The following compat layers are **no longer** when using this version:
+- [Trinkets Compat Layer](https://modrinth.com/mod/accessories-tc-layer/versions)
+- [Curios Compat Layer](https://modrinth.com/mod/accessories-cc-layer/versions)
+
+### Issues:
+- All screens or renderings for such have been unified to the Accessories Screen for the time being
+- Curios: Some features are know problems and will be attempted to be resolved within the future
+  - Active states are currently unimplemented, meaning mods taking advantage of such will be unable to control state of equipped accessories
+  - `ICurioSlotExtension` is not implemented, meaning any stack replacement or tooltip adjustments will not work
