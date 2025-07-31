@@ -45,7 +45,7 @@ public abstract class CuriosEntityManagerMixin {
         }
 
         this.entitySlots.computeIfAbsent(type, entityType -> {
-            return CuriosConversionUtils.slotsConvertToC(EntitySlotLoader.INSTANCE.getSlotTypes(((Object) this) == CuriosEntityManager.CLIENT, type));
+            return CuriosConversionUtils.slotTypesConvertToC(EntitySlotLoader.INSTANCE.getSlotTypes(((Object) this) == CuriosEntityManager.CLIENT, type));
         });
     }
 }

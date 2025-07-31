@@ -1,21 +1,12 @@
 package io.wispforest.accessories_compat.utils;
 
 import com.mojang.logging.LogUtils;
-import dev.emi.trinkets.api.TrinketInventory;
-import io.wispforest.accessories.api.AccessoriesContainer;
-import io.wispforest.accessories_compat.trinkets.wrapper.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.function.*;
 
 public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
 
@@ -127,26 +118,35 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
 
     @Override
     public @NotNull Set<K> keySet() {
-        return this.map.keySet().stream()
-            .map(this.toKeyNamespace)
-            .collect(Collectors.toUnmodifiableSet());
+        return new ImmutableWrappingCollection<>(
+            this.map.keySet(),
+            toKeyNamespace,
+            (ks, object) -> ks.contains(fromKeyNamespace.apply(object))
+        );
     }
 
     @Override
     public @NotNull Collection<V> values() {
-        return this.map.entrySet().stream()
-            .map(kiEntry -> this.toValueMapFunc.apply(kiEntry.getKey(), kiEntry.getValue()))
-            .collect(Collectors.toUnmodifiableSet());
+        return new ImmutableWrappingCollection<>(
+            this.map.entrySet(),
+            kiEntry -> this.toValueMapFunc.apply(kiEntry.getKey(), kiEntry.getValue()),
+            (entries, v) -> this.map.containsValue(this.fromValueMapFunc.apply(v))
+        );
     }
 
     @Override
     public @NotNull Set<Entry<K, V>> entrySet() {
-        return this.map.entrySet().stream()
-            .map(kiEntry ->
-                Map.entry(
-                    this.toKeyNamespace.apply(kiEntry.getKey()),
-                    this.toValueMapFunc.apply(kiEntry.getKey(), kiEntry.getValue())))
-            .collect(Collectors.toUnmodifiableSet());
+        return new ImmutableWrappingCollection<>(
+            this.map.entrySet(),
+            kiEntry -> Map.entry(
+                this.toKeyNamespace.apply(kiEntry.getKey()),
+                this.toValueMapFunc.apply(kiEntry.getKey(), kiEntry.getValue())),
+            (entries, kvEntry) -> {
+                var entry = this.map.get(this.fromKeyNamespace.apply(kvEntry.getKey()));
+
+                return Objects.equals(fromValueMapFunc.apply(kvEntry.getValue()), entry);
+            }
+        );
     }
 
     //--
@@ -156,3 +156,4 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
     @Override public void putAll(@NotNull Map<? extends K, ? extends V> m) {}
     @Override public void clear() {}
 }
+

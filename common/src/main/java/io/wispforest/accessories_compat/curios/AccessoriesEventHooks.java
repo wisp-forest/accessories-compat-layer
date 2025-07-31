@@ -30,15 +30,15 @@ public class AccessoriesEventHooks {
     public static void initAccessoriesEventHooks() {
         CanUnequipCallback.EVENT.register((stack, reference) -> {
             return CuriosConversionUtils.convertToFabric(
-                    NeoForge.EVENT_BUS.post(new CurioCanEquipEvent(stack, CuriosConversionUtils.convertToC(reference), TriState.DEFAULT))
-                            .getEquipResult()
+                    NeoForge.EVENT_BUS.post(new CurioCanUnequipEvent(stack, CuriosConversionUtils.objectsConvertToC(reference)))
+                            .getUnequipResult()
             );
         });
 
         CanEquipCallback.EVENT.register((stack, reference) -> {
             return CuriosConversionUtils.convertToFabric(
-                    NeoForge.EVENT_BUS.post(new CurioCanUnequipEvent(stack, CuriosConversionUtils.convertToC(reference)))
-                            .getUnequipResult()
+                    NeoForge.EVENT_BUS.post(new CurioCanEquipEvent(stack, CuriosConversionUtils.objectsConvertToC(reference), TriState.DEFAULT))
+                            .getEquipResult()
             );
         });
 
@@ -59,7 +59,7 @@ public class AccessoriesEventHooks {
         AdjustAttributeModifierCallback.EVENT.register((stack, reference, builder) -> {
             var slotLocation = ResourceLocation.fromNamespaceAndPath(CuriosConstants.MOD_ID, AccessoryAttributeBuilder.createSlotPath(reference));
 
-            NeoForge.EVENT_BUS.post(new CurioAttributeModifierEvent(stack, CuriosConversionUtils.convertToC(reference), slotLocation, HashMultimap.create()))
+            NeoForge.EVENT_BUS.post(new CurioAttributeModifierEvent(stack, CuriosConversionUtils.objectsConvertToC(reference), slotLocation, HashMultimap.create()))
                     .getModifiers()
                     .forEach(builder::addExclusive);
         });

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SlotAttributes.class)
 public abstract class SlotAttributesMixin {
 
-    @WrapMethod(method = "addSlotModifier")
+    @WrapMethod(method = "addSlotModifier", remap = false)
     private static void adjustAddSlotModifier(Multimap<Holder<Attribute>, AttributeModifier> map, String slot, ResourceLocation identifier, double amount, AttributeModifier.Operation operation, Operation<Void> original) {
         var data = TrinketsWrappingUtils.splitGroupInfo(slot);
         var slotType = TrinketsWrappingUtils.trinketsToAccessories_Slot(data.left(), data.right());
@@ -27,7 +27,7 @@ public abstract class SlotAttributesMixin {
         io.wispforest.accessories.api.attributes.SlotAttribute.addSlotModifier(map, slotType, identifier, amount, operation);
     }
 
-    @WrapOperation(method = "getIdentifier", at = @At(value = "INVOKE", target = "Ldev/emi/trinkets/api/SlotReference;getId()Ljava/lang/String;", remap = false))
+    @WrapOperation(method = "getIdentifier", at = @At(value = "INVOKE", target = "Ldev/emi/trinkets/api/SlotReference;getId()Ljava/lang/String;"), remap = false)
     private static String replaceAnyInvalidCharacters(SlotReference instance, Operation<String> original) {
         return original.call(instance).replace(":", "-");
     }

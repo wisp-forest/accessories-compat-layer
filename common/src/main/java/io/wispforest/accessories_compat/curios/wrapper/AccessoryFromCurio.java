@@ -47,27 +47,27 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
 
     @Override
     public TriState allowWalkingOnSnow(ItemStack itemStack, SlotReference slotReference) {
-        return convertBoolean(iCurio(itemStack).map(iCurio -> iCurio.canWalkOnPowderedSnow(convertToC(slotReference))).orElse(false));
+        return convertBoolean(iCurio(itemStack).map(iCurio -> iCurio.canWalkOnPowderedSnow(objectsConvertToC(slotReference))).orElse(false));
     }
 
     @Override
     public TriState isEndermanMasked(EnderMan enderMan, ItemStack itemStack, SlotReference slotReference) {
-        return convertBoolean(iCurio(itemStack).map(iCurio -> iCurio.isEnderMask(convertToC(slotReference), enderMan)).orElse(false));
+        return convertBoolean(iCurio(itemStack).map(iCurio -> iCurio.isEnderMask(objectsConvertToC(slotReference), enderMan)).orElse(false));
     }
 
     @Override
     public TriState makePiglinsNeutral(ItemStack itemStack, SlotReference slotReference) {
-        return convertBoolean(iCurio(itemStack).map(iCurio -> iCurio.makesPiglinsNeutral(convertToC(slotReference))).orElse(false));
+        return convertBoolean(iCurio(itemStack).map(iCurio -> iCurio.makesPiglinsNeutral(objectsConvertToC(slotReference))).orElse(false));
     }
 
     @Override
     public int getFortuneAdjustment(ItemStack itemStack, SlotReference slotReference, LootContext lootContext, int i) {
-        return iCurio(itemStack).map(iCurio -> iCurio.getFortuneLevel(convertToC(slotReference), lootContext)).orElse(0);
+        return iCurio(itemStack).map(iCurio -> iCurio.getFortuneLevel(objectsConvertToC(slotReference), lootContext)).orElse(0);
     }
 
     @Override
     public int getLootingAdjustment(ItemStack itemStack, SlotReference slotReference, LivingEntity livingEntity, LootContext lootContext, DamageSource damageSource, int i) {
-        return iCurio(itemStack).map(iCurio -> iCurio.getLootingLevel(convertToC(slotReference), lootContext)).orElse(0);
+        return iCurio(itemStack).map(iCurio -> iCurio.getLootingLevel(objectsConvertToC(slotReference), lootContext)).orElse(0);
     }
 
     private TriState convertBoolean(boolean value) {
@@ -79,32 +79,32 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
 
     @Override
     public void tick(ItemStack stack, SlotReference reference) {
-        iCurio(stack).ifPresent(iCurio -> iCurio.curioTick(convertToC(reference)));
+        iCurio(stack).ifPresent(iCurio -> iCurio.curioTick(objectsConvertToC(reference)));
     }
 
     @Override
     public void onEquip(ItemStack stack, SlotReference reference) {
-        iCurio(stack).ifPresent(iCurio -> iCurio.onEquip(convertToC(reference), ItemStack.EMPTY));
+        iCurio(stack).ifPresent(iCurio -> iCurio.onEquip(objectsConvertToC(reference), ItemStack.EMPTY));
     }
 
     @Override
     public void onUnequip(ItemStack stack, SlotReference reference) {
-        iCurio(stack).ifPresent(iCurio -> iCurio.onUnequip(convertToC(reference), ItemStack.EMPTY));
+        iCurio(stack).ifPresent(iCurio -> iCurio.onUnequip(objectsConvertToC(reference), ItemStack.EMPTY));
     }
 
     @Override
     public boolean canEquip(ItemStack stack, SlotReference reference) {
-        return iCurio(stack).map(iCurio -> iCurio.canEquip(convertToC(reference))).orElse(false);
+        return iCurio(stack).map(iCurio -> iCurio.canEquip(objectsConvertToC(reference))).orElse(false);
     }
 
     @Override
     public boolean canUnequip(ItemStack stack, SlotReference reference) {
-        return iCurio(stack).map(iCurio -> iCurio.canUnequip(convertToC(reference))).orElse(true);
+        return iCurio(stack).map(iCurio -> iCurio.canUnequip(objectsConvertToC(reference))).orElse(true);
     }
 
     @Override
     public void getDynamicModifiers(ItemStack stack, SlotReference reference, AccessoryAttributeBuilder builder) {
-        var ctx = convertToC(reference);
+        var ctx = objectsConvertToC(reference);
 
         Accessory.super.getDynamicModifiers(stack, reference, builder);
 
@@ -117,12 +117,12 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
 
     @Override
     public DropRule getDropRule(ItemStack stack, SlotReference reference, DamageSource source) {
-        return dropRuleConvertToA(iCurio(stack).map(iCurio -> iCurio.getDropRule(convertToC(reference), source, true)).orElse(ICurio.DropRule.DEFAULT));
+        return dropRuleConvertToA(iCurio(stack).map(iCurio -> iCurio.getDropRule(objectsConvertToC(reference), source, true)).orElse(ICurio.DropRule.DEFAULT));
     }
 
     @Override
     public void onEquipFromUse(ItemStack stack, SlotReference reference) {
-        iCurio(stack).ifPresent(iCurio -> iCurio.onEquipFromUse(convertToC(reference)));
+        iCurio(stack).ifPresent(iCurio -> iCurio.onEquipFromUse(objectsConvertToC(reference)));
     }
 
     @Override
@@ -137,7 +137,7 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
     @Override
     @Nullable
     public SoundEventData getEquipSound(ItemStack stack, SlotReference reference) {
-        var ctx = convertToC(reference);
+        var ctx = objectsConvertToC(reference);
 
         return this.iCurio(stack)
                 .map(iCurio -> iCurio.getEquipSound(ctx))
@@ -147,7 +147,7 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
 
     @Override
     public void onBreak(ItemStack stack, SlotReference reference) {
-        iCurio(stack).ifPresent(iCurio -> iCurio.curioBreak(convertToC(reference)));
+        iCurio(stack).ifPresent(iCurio -> iCurio.curioBreak(objectsConvertToC(reference)));
     }
 
     @Override

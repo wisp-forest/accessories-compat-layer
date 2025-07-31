@@ -33,7 +33,7 @@ public class CuriosConversionUtils {
     public static final Map<String, SlotType.Builder> CURRENT_SLOT_BUILDERS = new HashMap<>();
     public static final Map<EntityType<?>, ImmutableMap.Builder<String, ISlotType>> CURRENT_ENTITY_BINDINGS = new HashMap<>();
 
-    public static SlotContext convertToC(SlotReference slotReference) {
+    public static SlotContext objectsConvertToC(SlotReference slotReference) {
         return SlotContextExtension.from(slotReference);
     }
 
@@ -139,7 +139,7 @@ public class CuriosConversionUtils {
 //                .collect(Collectors.toMap(slotType -> slotConvertSlotToC(slotType.name()), AccessoriesBasedCurioSlot::new));
 //    }
 
-    public static Map<String, ISlotType> slotsConvertToC(@Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots) {
+    public static Map<String, ISlotType> slotTypesConvertToC(@Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots) {
         if (slots == null) return Map.of();
 
         return new ImmutableDelegatingMap<>(
@@ -154,7 +154,7 @@ public class CuriosConversionUtils {
         );
     }
 
-    public static <T> Map<String, T> convertToC(Class<T> clazz, @Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots, Function<io.wispforest.accessories.api.slot.SlotType, T> conversionFunc, BiPredicate<io.wispforest.accessories.api.slot.SlotType, T> finderFunc) {
+    public static <T> Map<String, T> objectsConvertToC(Class<T> clazz, @Nullable Map<String, io.wispforest.accessories.api.slot.SlotType> slots, Function<io.wispforest.accessories.api.slot.SlotType, T> conversionFunc, BiPredicate<io.wispforest.accessories.api.slot.SlotType, T> finderFunc) {
         if (slots == null) return Map.of();
 
         return new ImmutableDelegatingMap<>(

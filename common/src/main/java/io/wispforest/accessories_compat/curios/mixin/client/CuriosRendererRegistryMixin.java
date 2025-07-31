@@ -8,11 +8,11 @@ import io.wispforest.accessories.api.client.AccessoriesRendererRegistry;
 import io.wispforest.accessories.api.client.AccessoryRenderer;
 import io.wispforest.accessories.api.client.DefaultAccessoryRenderer;
 import io.wispforest.accessories.api.slot.SlotReference;
+import io.wispforest.accessories_compat.curios.wrapper.RenderLayerParentDummy;
 import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +39,7 @@ public abstract class CuriosRendererRegistryMixin {
                 public <M extends LivingEntity> void render(ItemStack stack, SlotReference reference, PoseStack matrices, EntityModel<M> model, MultiBufferSource multiBufferSource, int light, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
                     curiosRenderer.render(
                         stack,
-                        CuriosConversionUtils.convertToC(reference),
+                        CuriosConversionUtils.objectsConvertToC(reference),
                         matrices,
                         new RenderLayerParentDummy<>(model),
                         multiBufferSource,
@@ -90,7 +90,3 @@ public abstract class CuriosRendererRegistryMixin {
     }
 }
 
-record RenderLayerParentDummy<T extends LivingEntity>(EntityModel<T> getModel) implements RenderLayerParent<T, EntityModel<T>> {
-    @Override
-    public ResourceLocation getTextureLocation(T entity) { return ResourceLocation.withDefaultNamespace(""); }
-}
