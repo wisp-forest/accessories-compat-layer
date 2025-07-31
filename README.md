@@ -28,8 +28,8 @@ Using Accessories as the framework, this mod acts as a wrapper for both Trinkets
 
 ### Replaces: 
 The following compat layers are **no longer** when using this version:
-- [Trinkets Compat Layer](https://modrinth.com/mod/accessories-tc-layer/versions)
-- [Curios Compat Layer](https://modrinth.com/mod/accessories-cc-layer/versions)
+- [Trinkets Compat Layer](https://modrinth.com/mod/accessories-tc-layer)
+- [Curios Compat Layer](https://modrinth.com/mod/accessories-cc-layer)
 
 ### Issues:
 - All screens or renderings for such have been unified to the Accessories Screen for the time being
