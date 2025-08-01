@@ -3,10 +3,10 @@
   <br>
   αccessories Compatibility Layer
   <br>
-  <a href="https://modrinth.com/mod/accessories-compatibility-layer/">
+  <a href="https://modrinth.com/mod/accessories-compat-layer/">
       <img src="https://img.shields.io/badge/-modrinth-gray?style=for-the-badge&labelColor=1bd96a&labelWidth=15&logo=modrinth&logoColor=white">
   </a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/accessories-compatibility-layer">
+  <a href="https://www.curseforge.com/minecraft/mc-mods/accessories-compat-layer">
       <img src="https://img.shields.io/badge/-curseforge-gray?style=for-the-badge&labelColor=f16436&labelWidth=15&logo=curseforge&logoColor=white">
   </a>
   <br>
