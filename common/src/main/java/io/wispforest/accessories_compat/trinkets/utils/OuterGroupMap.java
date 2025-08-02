@@ -5,16 +5,15 @@ import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.slot.SlotType;
 import io.wispforest.accessories.data.SlotTypeLoader;
 import io.wispforest.accessories_compat.AccessoriesCompatInit;
+import io.wispforest.accessories_compat.trinkets.wrapper.EmptyTrinketInventory;
 import io.wispforest.accessories_compat.trinkets.wrapper.WrappedTrinketComponent;
 import io.wispforest.accessories_compat.trinkets.wrapper.WrappedTrinketInventory;
 import io.wispforest.accessories_compat.trinkets.wrapper.TrinketsWrappingUtils;
+import io.wispforest.accessories_compat.utils.ImmutableWrappingCollection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -182,7 +181,11 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
         private TrinketInventory create(SlotType type) {
             var container = OuterGroupMap.this.capability.getContainers().get(type.name());
 
-            if(container == null) throw new IllegalStateException("Unable to get the required Accessories container to wrap for Trinkets API call: [Slot: " + type.name() + "]");
+            if(container == null) {
+                errorMessage.accept("Unable to get the required Accessories container to wrap for Trinkets API call: [Slot: " + type.name() + "]");
+
+                return null;
+            }
 
             return new WrappedTrinketInventory(OuterGroupMap.this.trinketComponent, container, type);
         }
@@ -192,11 +195,13 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
         public Set<String> keySet() {
             var groupMap = groupMap();
 
-            if (groupMap == null) return Set.of();
+            if (groupMap == null || groupMap.isEmpty()) return Set.of();
 
-            return groupMap.keySet().stream()
-                .map(TrinketsWrappingUtils::accessoriesToTrinkets_Slot)
-                .collect(Collectors.toSet());
+            return new ImmutableWrappingCollection<>(
+                groupMap.keySet(),
+                TrinketsWrappingUtils::accessoriesToTrinkets_Slot,
+                (strings, s) -> strings.contains(TrinketsWrappingUtils.trinketsToAccessories_Slot(Optional.of(this.currentTrinketsGroup), s))
+            );
         }
 
         @Override
@@ -204,9 +209,13 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
         public Collection<TrinketInventory> values() {
             var groupMap = groupMap();
 
-            if (groupMap == null) return Set.of();
+            if (groupMap == null || groupMap.isEmpty()) return Set.of();
 
-            return groupMap.values().stream().map(this::create).collect(Collectors.toSet());
+            return new ImmutableWrappingCollection<>(
+                groupMap.entrySet(),
+                kiEntry -> this.create(kiEntry.getValue()),
+                (entries, v) -> groupMap.containsValue(((WrappedTrinketInventory) v).getAccessoreisSlotType())
+            );
         }
 
         @Override
@@ -214,11 +223,15 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
         public Set<Entry<String, TrinketInventory>> entrySet() {
             var groupMap = groupMap();
 
-            if (groupMap == null) return Set.of();
+            if (groupMap == null || groupMap.isEmpty()) return Set.of();
 
-            return groupMap.values().stream()
-                .map(slotType -> Map.entry(TrinketsWrappingUtils.accessoriesToTrinkets_Slot(slotType.name()), this.create(slotType)))
-                .collect(Collectors.toSet());
+            return new ImmutableWrappingCollection<>(
+                groupMap.entrySet(),
+                kiEntry -> Map.entry(TrinketsWrappingUtils.accessoriesToTrinkets_Slot(kiEntry.getKey()), this.create(kiEntry.getValue())),
+                (entries, v) -> {
+                    return groupMap.containsValue(((WrappedTrinketInventory) v).getAccessoreisSlotType());
+                }
+            );
         }
 
         @Override public @Nullable TrinketInventory put(String key, TrinketInventory value) { return null; }

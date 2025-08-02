@@ -23,6 +23,10 @@ public class WrappedTrinketInventory extends TrinketInventory {
         this.container = container;
     }
 
+    public SlotType getAccessoreisSlotType() {
+        return ((WrappedSlotType) this.getSlotType()).slotType;
+    }
+
     public void setOtherGroupName(String value) {
         ((WrappedSlotType) this.getSlotType()).setOtherGroupName(value);
     }
