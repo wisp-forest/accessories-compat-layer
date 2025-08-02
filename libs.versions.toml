@@ -26,10 +26,10 @@ ffapi_base    = "0.4.42+d1308dedd1"
 neoforge_range="[21.1.191,)"
 neoforge_loader_range="[4,)"
 
-accessories="1.1.0-beta.43+1.21.1"
+accessories="1.1.0-beta.48+1.21.1"
 
-accessories_fabric_range=">=1.1.0-beta.43+1.21.1"
-accessories_neoforge_range="[1.1.0-beta.43+1.21.1,)"
+accessories_fabric_range=">=1.1.0-beta.48+1.21.1"
+accessories_neoforge_range="[1.1.0-beta.48+1.21.1,)"
 
 trinkets="3.10.0"
 trinkets_suggests_range=">=3.10.0"
