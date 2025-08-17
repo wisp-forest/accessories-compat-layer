@@ -14,6 +14,7 @@ import io.wispforest.accessories_compat.curios.mixin.accessor.ItemizedCurioCapab
 import io.wispforest.accessories_compat.curios.mixin.accessor.SlotTypeBuilderAccessor;
 import io.wispforest.accessories_compat.curios.wrapper.AccessoryFromCurio;
 import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
+import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -36,10 +37,21 @@ import java.util.Set;
 
 public class CuriosCompat extends ModCompatibilityModule {
 
-    public static final CuriosCompat INSTANCE = new CuriosCompat();
+    public static final CuriosCompat INSTANCE = create();
 
     protected CuriosCompat() {
         super("curios");
+    }
+
+    @Nullable
+    private static CuriosCompat create() {
+        if (!LoaderPlatformUtils.INSTANCE.isModLoaded("curios")) {
+            AccessoriesCompatInit.LOGGER.error("Attempted to load the CuriosCompat while Curios the mod is not loaded!");
+
+            return null;
+        }
+
+        return new CuriosCompat();
     }
 
     @Override

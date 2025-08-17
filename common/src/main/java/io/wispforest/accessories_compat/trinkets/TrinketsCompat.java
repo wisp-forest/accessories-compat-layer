@@ -19,6 +19,7 @@ import io.wispforest.accessories_compat.trinkets.utils.SlotIdRedirect;
 import io.wispforest.accessories_compat.trinkets.wrapper.TrinketsWrappingUtils;
 import io.wispforest.accessories_compat.trinkets.wrapper.TrinketFromAccessory;
 import io.wispforest.accessories_compat.trinkets.wrapper.AccessoryFromTrinket;
+import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,10 +31,21 @@ import java.util.*;
 
 public class TrinketsCompat extends ModCompatibilityModule {
 
-    public static final TrinketsCompat INSTANCE = new TrinketsCompat();
+    public static final TrinketsCompat INSTANCE = create();
 
     protected TrinketsCompat() {
         super("trinkets");
+    }
+
+    @Nullable
+    private static TrinketsCompat create() {
+        if (!LoaderPlatformUtils.INSTANCE.isModLoaded("trinkets")) {
+            AccessoriesCompatInit.LOGGER.error("Attempted to load the TrinketsCompat while Trinkets the mod is not loaded!");
+
+            return null;
+        }
+
+        return new TrinketsCompat();
     }
 
     //--
