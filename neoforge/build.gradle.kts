@@ -83,7 +83,7 @@ dependencies {
     forgeRuntimeLibrary(libs.jankson)
     // --
 
-    modCompileOnly(libs.trinkets)
+    //modCompileOnly(libs.trinkets)
     fabricModule(this::modCompileOnly, "fabric-resource-loader-v0", "fabric-events-interaction-v0")
 
     modImplementation(libs.curios)
