@@ -38,14 +38,8 @@ public abstract class CuriosEntityManagerMixin {
         return original.call(new HashMap<>());
     }
 
-    @Inject(method = "getEntitySlots", at = @At("HEAD"))
+    @Inject(method = "getEntitySlots", at = @At("HEAD"), cancellable = true)
     private void getConvertedEntitySlots(EntityType<?> type, CallbackInfoReturnable<Map<String, ISlotType>> cir) {
-        if (!(this.entitySlots instanceof HashMap)) {
-            this.entitySlots = new HashMap<>();
-        }
-
-        this.entitySlots.computeIfAbsent(type, entityType -> {
-            return CuriosConversionUtils.slotTypesConvertToC(EntitySlotLoader.INSTANCE.getSlotTypes(((Object) this) == CuriosEntityManager.CLIENT, type));
-        });
+        cir.setReturnValue(CuriosConversionUtils.slotTypesConvertToC(EntitySlotLoader.INSTANCE.getSlotTypes(((Object) this) == CuriosEntityManager.CLIENT, type)));
     }
 }
