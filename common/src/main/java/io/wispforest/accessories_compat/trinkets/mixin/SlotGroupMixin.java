@@ -3,11 +3,10 @@ package io.wispforest.accessories_compat.trinkets.mixin;
 import dev.emi.trinkets.api.SlotGroup;
 import io.wispforest.accessories.api.slot.SlotType;
 import io.wispforest.accessories.data.SlotGroupLoader;
+import io.wispforest.accessories_compat.trinkets.pond.SlotGroupBuilderExtension;
 import io.wispforest.accessories_compat.trinkets.pond.SlotGroupExtension;
 import io.wispforest.accessories_compat.trinkets.wrapper.TrinketsWrappingUtils;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Map;
@@ -67,8 +66,15 @@ public abstract class SlotGroupMixin implements SlotGroupExtension {
     }
 
     @Mixin(SlotGroup.Builder.class)
-    public interface SlotGroupBuilderAccessor {
-        @Accessor(value = "slots", remap = false)
-        void slots(Map<String, dev.emi.trinkets.api.SlotType> slots);
+    public static abstract class SlotGroupBuilderMixin implements SlotGroupBuilderExtension {
+
+        @Shadow(remap = false)
+        @Mutable
+        private Map<String, dev.emi.trinkets.api.SlotType> slots;
+
+        @Override
+        public void accessories$slots(Map<String, dev.emi.trinkets.api.SlotType> slots) {
+            this.slots = slots;
+        }
     }
 }

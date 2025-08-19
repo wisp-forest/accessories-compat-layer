@@ -2,6 +2,7 @@ package io.wispforest.accessories_compat.trinkets.wrapper;
 
 import dev.emi.trinkets.api.SlotGroup;
 import io.wispforest.accessories_compat.trinkets.mixin.SlotGroupMixin;
+import io.wispforest.accessories_compat.trinkets.pond.SlotGroupBuilderExtension;
 import io.wispforest.accessories_compat.trinkets.pond.SlotGroupExtension;
 
 import java.util.Map;
@@ -20,7 +21,7 @@ public class WrappedSlotGroup {
         public ExtendedSlotGroupBuilder(String name, Map<String, io.wispforest.accessories.api.slot.SlotType> slots, boolean isClientSide) {
             super(name, 0, 0);
 
-            ((SlotGroupMixin.SlotGroupBuilderAccessor) this).slots(TrinketsWrappingUtils.slotType(slots, name));
+            ((SlotGroupBuilderExtension) this).accessories$slots(TrinketsWrappingUtils.slotType(slots, name));
 
             this.accessorySlots = slots;
             this.isClientSide = isClientSide;

@@ -19,7 +19,7 @@
     "PlayerListMixin",
     "SlotAttributesMixin",
     "SlotGroupMixin",
-    "SlotGroupMixin$SlotGroupBuilderAccessor",
+    "SlotGroupMixin$SlotGroupBuilderMixin",
     "TrinketItemMixin",
     "TrinketsAPIMixin",
     "TrinketsAttributeModifiersComponentMixin",
