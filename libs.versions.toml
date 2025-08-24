@@ -42,7 +42,7 @@ curios_breaks_range="[,9.5.1+1.21.1)"
 # Libs
 
 mixinextras = "0.4.1"
-mixinsquared = "0.3.3"
+mixinsquared = "0.3.4"
 
 modmenu = "11.0.3"        # https://modrinth.com/mod/modmenu/versions
 
