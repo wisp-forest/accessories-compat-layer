@@ -23,7 +23,8 @@
     "IconHelperMixin",
     "RegisterCapabilitiesEventMixin",
     "SlotAttributeMixin",
-    "SlotContextMixin"
+    "SlotContextMixin",
+    "CuriosTagsMixin"
   ],
   "client": [
     "client.ClientLanguageMixin",
