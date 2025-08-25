@@ -13,6 +13,11 @@ public abstract class CuriosTagsMixin {
     private static ResourceLocation accessories$adjustTagCreation(String namespace, String path, Operation<ResourceLocation> original) {
         var parts = path.split(":");
 
-        return original.call(parts.length >= 2 ? parts[0] : namespace, path);
+        if (parts.length >= 2) {
+            namespace = parts[0];
+            path = parts[1];
+        }
+
+        return original.call(namespace, path);
     }
 }
