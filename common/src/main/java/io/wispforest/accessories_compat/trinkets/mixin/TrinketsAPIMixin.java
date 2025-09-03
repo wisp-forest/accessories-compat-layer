@@ -41,6 +41,9 @@ public abstract class TrinketsAPIMixin {
     // Register trinkets into accessories
     @Inject(method = "registerTrinket", at = @At("TAIL"), remap = false)
     private static void registerTrinketAsAccessory(Item item, Trinket trinket, CallbackInfo ci) {
+        // Check if the given item already has an Accessory registered
+        if (AccessoriesAPI.getAccessory(item) != null) return;
+
         AccessoriesAPI.registerAccessory(item, new AccessoryFromTrinket(trinket));
     }
 

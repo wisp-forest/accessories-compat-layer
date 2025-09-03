@@ -43,6 +43,9 @@ public abstract class CuriosImplMixinHooksMixin {
 
     @Inject(method = "registerCurio", at = @At("TAIL"))
     private static void registerCurioAsAccessory(Item item, ICurioItem icurio, CallbackInfo ci) {
+        // Check if the given item already has an Accessory registered
+        if (AccessoriesAPI.getAccessory(item) != null) return;
+
         AccessoriesAPI.registerAccessory(item, CuriosConversionUtils.curioConvertToA(icurio));
     }
 

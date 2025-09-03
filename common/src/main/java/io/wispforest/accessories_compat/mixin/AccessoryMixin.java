@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Accessory.class)
 public interface AccessoryMixin {
     @Inject(method = "canEquipFromUse(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
-    private void tclayer$checkIfFromTrinket(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    private void accessories$checkIfFromTrinket(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         for (var value : ModCompatibilityModule.getModules().values()) {
             if (stack.is(TagKey.create(Registries.ITEM, value.getAllItemTag())) && AccessoriesAPI.isDefaultAccessory((Accessory)(Object)this)) {
                 cir.setReturnValue(false);
