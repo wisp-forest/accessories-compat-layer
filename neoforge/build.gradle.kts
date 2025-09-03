@@ -55,6 +55,9 @@ repositories {
 
     // Mixin Squard
     maven("https://maven.bawnorton.com/releases")
+
+    maven("https://api.modrinth.com/maven")
+    maven("https://modmaven.dev/artifactory/local-releases/")
 }
 
 dependencies {
@@ -93,6 +96,11 @@ dependencies {
     annotationProcessor(libs.mixin.squared.neoforge)
     implementation(libs.mixin.squared.neoforge)
     include(libs.mixin.squared.neoforge)
+
+    //modImplementation("de.mari_023:ae2wtlib:19.2.6")
+    //modImplementation("de.mari_023:ae2wtlib_api:19.2.6")
+
+    //modImplementation("org.appliedenergistics:appliedenergistics2:19.2.15")
 }
 
 loom {
