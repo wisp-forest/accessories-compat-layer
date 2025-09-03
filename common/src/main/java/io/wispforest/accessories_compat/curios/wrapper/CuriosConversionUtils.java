@@ -1,12 +1,15 @@
 package io.wispforest.accessories_compat.curios.wrapper;
 
 import com.google.common.collect.ImmutableMap;
+import io.wispforest.accessories.api.AccessoriesContainer;
 import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.DropRule;
 import io.wispforest.accessories.api.data.AccessoriesBaseData;
 import io.wispforest.accessories.api.slot.SlotReference;
+import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import io.wispforest.accessories_compat.curios.pond.SlotContextExtension;
 import io.wispforest.accessories_compat.utils.ImmutableDelegatingMap;
+import io.wispforest.accessories_compat.utils.MapComparator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +21,7 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.common.capability.ItemizedCurioCapability;
 import top.theillusivec4.curios.common.slottype.SlotType;
 
@@ -170,6 +174,20 @@ public class CuriosConversionUtils {
 
                 return null;
             }
+        );
+    }
+
+    private static final MapComparator<String, AccessoriesContainer> MAP_COMPARATOR = MapComparator.of(AccessoriesContainer::getSlotName);
+
+    public static <T> Map<String, ICurioStacksHandler> slotContainersToC(AccessoriesHolderImpl holder, boolean sortIterators) {
+        return new ImmutableDelegatingMap<>(
+            "containers", String.class, ICurioStacksHandler.class,
+            holder.getSlotContainers(),
+            CuriosConversionUtils::slotConvertToC,
+            CuriosConversionUtils::slotConvertToA,
+            AccessoriesBasedStackHandler::new,
+            handler -> (handler instanceof AccessoriesBasedStackHandler(var container)) ? container : null,
+            sortIterators ? MAP_COMPARATOR : null
         );
     }
 

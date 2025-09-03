@@ -12,9 +12,7 @@ import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import io.wispforest.accessories_compat.curios.pond.CurioInventoryCapabilityExtension;
 import io.wispforest.accessories_compat.curios.pond.CurioInventoryExtension;
-import io.wispforest.accessories_compat.curios.wrapper.AccessoriesBasedStackHandler;
 import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
-import io.wispforest.accessories_compat.utils.ImmutableDelegatingMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -68,7 +66,8 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
     }
 
     @Nullable
-    private AccessoriesHolderImpl holder() {
+    @Override
+    public AccessoriesHolderImpl holder() {
         if (capability != null) {
             if (holder == null) holder = ((AccessoriesHolderImpl) capability.getHolder());
 
@@ -189,16 +188,7 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
             var holder = holder();
 
             if (holder != null) {
-                cir.setReturnValue(
-                    new ImmutableDelegatingMap<>(
-                        "containers", String.class, ICurioStacksHandler.class,
-                        holder.getSlotContainers(),
-                        CuriosConversionUtils::slotConvertToC,
-                        CuriosConversionUtils::slotConvertToA,
-                        AccessoriesBasedStackHandler::new,
-                        handler -> (handler instanceof AccessoriesBasedStackHandler(var container)) ? container : null
-                    )
-                );
+                cir.setReturnValue(CuriosConversionUtils.slotContainersToC(holder, false));
             }
         }
     }

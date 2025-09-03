@@ -2,6 +2,8 @@ package io.wispforest.accessories_compat.curios.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import io.wispforest.accessories_compat.curios.pond.CurioInventoryExtension;
+import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -14,6 +16,6 @@ import java.util.Map;
 public abstract class CurioItemHandlerMixin {
     @WrapOperation(method = "<init>", at = @At(value = "FIELD", target = "Ltop/theillusivec4/curios/common/capability/CurioInventory;curios:Ljava/util/Map;"))
     private Map<String, ICurioStacksHandler> adjustMapGrabToMethod(CurioInventory instance, Operation<Map<String, ICurioStacksHandler>> original) {
-        return instance.asMap();
+        return CuriosConversionUtils.slotContainersToC(((CurioInventoryExtension) instance).holder(), true);
     }
 }

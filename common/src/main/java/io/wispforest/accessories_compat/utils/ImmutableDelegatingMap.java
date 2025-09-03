@@ -26,28 +26,39 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
     public final BiFunction<K, I, V> toValueMapFunc;
     public final Function<V, @Nullable I> fromValueMapFunc;
 
+    @Nullable
+    public final MapComparator<K, I> mapComparator;
+
     public ImmutableDelegatingMap(
-        String debugNaming,
-        Class<K> keyClass,
-        Class<V> valueClass,
-        Map<K, I> map,
-        UnaryOperator<K> toKeyNamespace,
-        UnaryOperator<K> fromKeyNamespace,
-        Function<I, V> toValueMapFunc,
-        Function<V, @Nullable I> fromValueMapFunc
+        String debugNaming, Class<K> keyClass, Class<V> valueClass, Map<K, I> map,
+        UnaryOperator<K> toKeyNamespace, UnaryOperator<K> fromKeyNamespace,
+        Function<I, V> toValueMapFunc, Function<V, @Nullable I> fromValueMapFunc
     ) {
-        this(debugNaming, keyClass, valueClass, map, toKeyNamespace, fromKeyNamespace, (K k, I i) -> toValueMapFunc.apply(i), fromValueMapFunc);
+        this(debugNaming, keyClass, valueClass, map, toKeyNamespace, fromKeyNamespace, toValueMapFunc, fromValueMapFunc, null);
     }
 
     public ImmutableDelegatingMap(
-        String debugNaming,
-        Class<K> keyClass,
-        Class<V> valueClass,
-        Map<K, I> map,
-        UnaryOperator<K> toKeyNamespace,
-        UnaryOperator<K> fromKeyNamespace,
-        BiFunction<K, I, V> toValueMapFunc,
-        Function<V, @Nullable I> fromValueMapFunc
+        String debugNaming, Class<K> keyClass, Class<V> valueClass, Map<K, I> map,
+        UnaryOperator<K> toKeyNamespace, UnaryOperator<K> fromKeyNamespace,
+        Function<I, V> toValueMapFunc, Function<V, @Nullable I> fromValueMapFunc,
+        MapComparator<K, I> mapComparator
+    ) {
+        this(debugNaming, keyClass, valueClass, map, toKeyNamespace, fromKeyNamespace, (K k, I i) -> toValueMapFunc.apply(i), fromValueMapFunc, mapComparator);
+    }
+
+    public ImmutableDelegatingMap(
+        String debugNaming, Class<K> keyClass, Class<V> valueClass, Map<K, I> map,
+        UnaryOperator<K> toKeyNamespace, UnaryOperator<K> fromKeyNamespace,
+        BiFunction<K, I, V> toValueMapFunc, Function<V, @Nullable I> fromValueMapFunc
+    ) {
+        this(debugNaming, keyClass, valueClass, map, toKeyNamespace, fromKeyNamespace, toValueMapFunc, fromValueMapFunc, null);
+    }
+
+    public ImmutableDelegatingMap(
+        String debugNaming, Class<K> keyClass, Class<V> valueClass, Map<K, I> map,
+        UnaryOperator<K> toKeyNamespace, UnaryOperator<K> fromKeyNamespace,
+        BiFunction<K, I, V> toValueMapFunc, Function<V, @Nullable I> fromValueMapFunc,
+        MapComparator<K, I> mapComparator
     ) {
         this.debugNaming = debugNaming;
 
@@ -61,6 +72,8 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
 
         this.toValueMapFunc = toValueMapFunc;
         this.fromValueMapFunc = fromValueMapFunc;
+
+        this.mapComparator = mapComparator;
     }
 
     public ImmutableDelegatingMap<K, V, I> errorMessageSupplier(Runnable errorMessage) {
@@ -120,6 +133,7 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
     public @NotNull Set<K> keySet() {
         return new ImmutableWrappingCollection<>(
             this.map.keySet(),
+            mapComparator != null ? ks -> ks.stream().sorted(mapComparator.keyComparator()).iterator() : null,
             toKeyNamespace,
             (ks, object) -> ks.contains(fromKeyNamespace.apply(object))
         );
@@ -129,6 +143,7 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
     public @NotNull Collection<V> values() {
         return new ImmutableWrappingCollection<>(
             this.map.entrySet(),
+            mapComparator != null ? ks -> ks.stream().sorted(mapComparator.entryComparator()).iterator() : null,
             kiEntry -> this.toValueMapFunc.apply(kiEntry.getKey(), kiEntry.getValue()),
             (entries, v) -> this.map.containsValue(this.fromValueMapFunc.apply(v))
         );
@@ -138,6 +153,7 @@ public final class ImmutableDelegatingMap<K, V, I> implements Map<K, V> {
     public @NotNull Set<Entry<K, V>> entrySet() {
         return new ImmutableWrappingCollection<>(
             this.map.entrySet(),
+            mapComparator != null ? ks -> ks.stream().sorted(mapComparator.entryComparator()).iterator() : null,
             kiEntry -> Map.entry(
                 this.toKeyNamespace.apply(kiEntry.getKey()),
                 this.toValueMapFunc.apply(kiEntry.getKey(), kiEntry.getValue())),

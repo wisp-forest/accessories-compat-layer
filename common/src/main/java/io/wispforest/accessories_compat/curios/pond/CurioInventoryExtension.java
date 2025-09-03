@@ -1,5 +1,6 @@
 package io.wispforest.accessories_compat.curios.pond;
 
+import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -7,4 +8,6 @@ import java.util.List;
 public interface CurioInventoryExtension {
 
     List<ItemStack> getInvalidStacks();
+
+    AccessoriesHolderImpl holder();
 }

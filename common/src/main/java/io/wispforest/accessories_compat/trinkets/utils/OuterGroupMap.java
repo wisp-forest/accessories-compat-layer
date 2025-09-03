@@ -199,6 +199,7 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
 
             return new ImmutableWrappingCollection<>(
                 groupMap.keySet(),
+                null,
                 TrinketsWrappingUtils::accessoriesToTrinkets_Slot,
                 (strings, s) -> strings.contains(TrinketsWrappingUtils.trinketsToAccessories_Slot(Optional.of(this.currentTrinketsGroup), s))
             );
@@ -213,6 +214,7 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
 
             return new ImmutableWrappingCollection<>(
                 groupMap.entrySet(),
+                null,
                 kiEntry -> this.create(kiEntry.getValue()),
                 (entries, v) -> groupMap.containsValue(((WrappedTrinketInventory) v).getAccessoreisSlotType())
             );
@@ -227,6 +229,7 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
 
             return new ImmutableWrappingCollection<>(
                 groupMap.entrySet(),
+                null,
                 kiEntry -> Map.entry(TrinketsWrappingUtils.accessoriesToTrinkets_Slot(kiEntry.getKey()), this.create(kiEntry.getValue())),
                 (entries, v) -> {
                     return groupMap.containsValue(((WrappedTrinketInventory) v).getAccessoreisSlotType());

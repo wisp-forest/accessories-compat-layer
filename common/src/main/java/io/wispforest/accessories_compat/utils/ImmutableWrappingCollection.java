@@ -1,6 +1,7 @@
 package io.wispforest.accessories_compat.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -11,11 +12,15 @@ public class ImmutableWrappingCollection<V, T> extends AbstractCollection<T> imp
 
     final Set<V> collection;
 
+    @Nullable
+    final Function<Set<V>, Iterator<V>> sortIterator;
+
     final Function<V, T> toCollectionType;
     final BiPredicate<Collection<V>, T> containsCheck;
 
-    public ImmutableWrappingCollection(Set<V> collection, Function<V, T> toCollectionType, BiPredicate<Collection<V>, T> containsCheck) {
+    public ImmutableWrappingCollection(Set<V> collection, Function<Set<V>, Iterator<V>> sortIterator, Function<V, T> toCollectionType, BiPredicate<Collection<V>, T> containsCheck) {
         this.collection = collection;
+        this.sortIterator = sortIterator;
         this.toCollectionType = toCollectionType;
         this.containsCheck = containsCheck;
     }
@@ -72,7 +77,9 @@ public class ImmutableWrappingCollection<V, T> extends AbstractCollection<T> imp
     public Iterator<T> iterator() {
         if (this.collection.isEmpty()) return Collections.emptyIterator();
 
-        var itr = this.collection.iterator();
+        var itr = sortIterator != null
+            ? sortIterator.apply(this.collection)
+            : this.collection.iterator();
 
         return new Iterator<T>() {
             @Override
