@@ -22,11 +22,6 @@ import java.util.Set;
 @Mixin(CuriosEntityManager.class)
 public abstract class CuriosEntityManagerMixin {
 
-    @Shadow
-    private Map<EntityType<?>, Map<String, ISlotType>> entitySlots;
-    @Unique
-    private boolean resetSlotCache = false;
-
     @WrapOperation(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", ordinal = 2)

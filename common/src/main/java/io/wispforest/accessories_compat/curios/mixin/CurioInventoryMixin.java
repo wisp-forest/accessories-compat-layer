@@ -65,9 +65,17 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
         return List.of();
     }
 
-    @Nullable
     @Override
-    public AccessoriesHolderImpl holder() {
+    public Map<String, ICurioStacksHandler> getCuriosSlotView(boolean sorted) {
+        var holder = holder();
+
+        return (holder != null)
+            ? CuriosConversionUtils.slotContainersToC(holder, sorted)
+            : Map.of();
+    }
+
+    @Nullable
+    private AccessoriesHolderImpl holder() {
         if (capability != null) {
             if (holder == null) holder = ((AccessoriesHolderImpl) capability.getHolder());
 
@@ -182,15 +190,7 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
 
     @Inject(method = "asMap", at = @At("HEAD"), cancellable = true, remap = false)
     private void getMapFromAccessoriesHolder(CallbackInfoReturnable<Map<String, ICurioStacksHandler>> cir) {
-        if (capability == null) {
-            cir.setReturnValue(Map.of());
-        } else {
-            var holder = holder();
-
-            if (holder != null) {
-                cir.setReturnValue(CuriosConversionUtils.slotContainersToC(holder, false));
-            }
-        }
+        cir.setReturnValue(getCuriosSlotView(false));
     }
 
     @Inject(method = "replace", at = @At("HEAD"), cancellable = true, remap = false)

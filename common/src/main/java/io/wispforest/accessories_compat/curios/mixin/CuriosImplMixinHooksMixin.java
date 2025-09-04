@@ -77,12 +77,12 @@ public abstract class CuriosImplMixinHooksMixin {
         if (accessory != null) cir.setReturnValue(Optional.ofNullable(CuriosConversionUtils.accessoryConvertToC(accessory, stack)));
     }
 
-    @WrapOperation(method = "getCuriosInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getCapability(Lnet/neoforged/neoforge/capabilities/EntityCapability;)Ljava/lang/Object;"))
-    private static Object checkForAccessoriesCapability(LivingEntity instance, EntityCapability entityCapability, Operation<Object> original) {
-        var capability = AccessoriesCapability.get(instance);
-
-        return capability != null ? original.call(instance, entityCapability) : null;
-    }
+//    @WrapOperation(method = "getCuriosInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getCapability(Lnet/neoforged/neoforge/capabilities/EntityCapability;)Ljava/lang/Object;"))
+//    private static Object checkForAccessoriesCapability(LivingEntity instance, EntityCapability entityCapability, Operation<Object> original) {
+//        var capability = AccessoriesCapability.get(instance);
+//
+//        return capability != null ? original.call(instance, entityCapability) : null;
+//    }
 
     @Inject(method = "broadcastCurioBreakEvent", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/network/PacketDistributor;sendToPlayersTrackingEntityAndSelf(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload;[Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload;)V"))
     private static void broadcastAsAccessoryEvent(SlotContext slotContext, CallbackInfo ci) {

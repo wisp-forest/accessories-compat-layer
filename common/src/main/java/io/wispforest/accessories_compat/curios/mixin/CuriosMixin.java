@@ -2,6 +2,7 @@ package io.wispforest.accessories_compat.curios.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.data.SlotTypeLoader;
@@ -26,12 +27,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.theillusivec4.curios.Curios;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
-import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 import top.theillusivec4.curios.common.capability.ItemizedCurioCapability;
 import top.theillusivec4.curios.server.SlotHelper;
 import top.theillusivec4.curios.server.command.CurioArgumentType;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Mixin(Curios.class)
@@ -49,10 +50,9 @@ public abstract class CuriosMixin {
         AccessoriesEventHooks.initAccessoriesEventHooks();
     }
 
-    @WrapOperation(method = "lambda$registerCaps$1", at = @At(value = "NEW", target = "(Lnet/minecraft/world/entity/LivingEntity;)Ltop/theillusivec4/curios/common/capability/CurioInventoryCapability;"))
-    private static CurioInventoryCapability useCuriosApiToCreateInvCap(LivingEntity livingEntity, Operation<CurioInventoryCapability> original) {
-        var capability = AccessoriesCapability.get(livingEntity);
-        return capability != null ? original.call(livingEntity) : null;
+    @WrapOperation(method = {"lambda$registerCaps$0", "lambda$registerCaps$1"}, at = @At(value = "INVOKE", target = "Ljava/util/Map;isEmpty()Z"))
+    private static boolean checkIfValidForAccessories(Map instance, Operation<Boolean> original, @Local(ordinal = 0) LivingEntity livingEntity) {
+        return AccessoriesCapability.get(livingEntity) != null;
     }
 
     @WrapOperation(method = "registerCaps", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/capabilities/RegisterCapabilitiesEvent;registerItem(Lnet/neoforged/neoforge/capabilities/ItemCapability;Lnet/neoforged/neoforge/capabilities/ICapabilityProvider;[Lnet/minecraft/world/level/ItemLike;)V"))

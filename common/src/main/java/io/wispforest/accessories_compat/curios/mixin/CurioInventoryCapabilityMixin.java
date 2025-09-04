@@ -107,7 +107,7 @@ public abstract class CurioInventoryCapabilityMixin implements CurioInventoryCap
 
     @WrapOperation(method = "getCurios", at = @At(value = "INVOKE", target = "Ltop/theillusivec4/curios/common/capability/CurioInventory;asMap()Ljava/util/Map;"), remap = false)
     private Map<String, ICurioStacksHandler> adjustMapGrabToMethod(CurioInventory instance, Operation<Map<String, ICurioStacksHandler>> original) {
-        return CuriosConversionUtils.slotContainersToC(((CurioInventoryExtension) instance).holder(), true);
+        return ((CurioInventoryExtension) instance).getCuriosSlotView(true);
     }
 
     /**

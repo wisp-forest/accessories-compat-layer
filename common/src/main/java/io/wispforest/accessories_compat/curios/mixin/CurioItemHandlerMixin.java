@@ -16,6 +16,6 @@ import java.util.Map;
 public abstract class CurioItemHandlerMixin {
     @WrapOperation(method = "<init>", at = @At(value = "FIELD", target = "Ltop/theillusivec4/curios/common/capability/CurioInventory;curios:Ljava/util/Map;"))
     private Map<String, ICurioStacksHandler> adjustMapGrabToMethod(CurioInventory instance, Operation<Map<String, ICurioStacksHandler>> original) {
-        return CuriosConversionUtils.slotContainersToC(((CurioInventoryExtension) instance).holder(), true);
+        return ((CurioInventoryExtension) instance).getCuriosSlotView(true);
     }
 }
