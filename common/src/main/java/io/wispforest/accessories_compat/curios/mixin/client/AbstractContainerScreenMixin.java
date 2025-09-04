@@ -23,45 +23,45 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow @Nullable
     protected Slot hoveredSlot;
 
-    @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;getItem()Lnet/minecraft/world/item/ItemStack;"))
-    private ItemStack accessories_compat$adjustDisplayStack(Slot instance, Operation<ItemStack> original) {
-        var stack = original.call(instance);
-
-        if (instance instanceof SlotTypeAccessible access) {
-            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
-
-            if (ext != ICurioSlotExtension.DEFAULT) {
-                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(instance.getContainerSlot()));
-
-                stack = ext.getDisplayStack(ctx, stack);
-            }
-        }
-
-        return stack;
-    }
-
-    @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;getTooltipFromContainerItem(Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;"))
-    private List<Component> accessories_compat$addThatItsNotReal(AbstractContainerScreen instance, ItemStack stack, Operation<List<Component>> original) {
-        boolean displayStack = false;
-
-        if (this.hoveredSlot instanceof SlotTypeAccessible access) {
-            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
-
-            if (ext != ICurioSlotExtension.DEFAULT) {
-                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(this.hoveredSlot.getContainerSlot()));
-
-                stack = ext.getDisplayStack(ctx, stack);
-
-                displayStack = true;
-            }
-        }
-
-        List<Component> tooltips = new ArrayList<>(original.call(instance, stack));
-
-        if(displayStack) {
-            tooltips.addLast(Component.literal("[Curios Displayed Stack]"));
-        }
-
-        return tooltips;
-    }
+//    @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;getItem()Lnet/minecraft/world/item/ItemStack;"))
+//    private ItemStack accessories_compat$adjustDisplayStack(Slot instance, Operation<ItemStack> original) {
+//        var stack = original.call(instance);
+//
+//        if (instance instanceof SlotTypeAccessible access) {
+//            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
+//
+//            if (ext != ICurioSlotExtension.DEFAULT) {
+//                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(instance.getContainerSlot()));
+//
+//                stack = ext.getDisplayStack(ctx, stack);
+//            }
+//        }
+//
+//        return stack;
+//    }
+//
+//    @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;getTooltipFromContainerItem(Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;"))
+//    private List<Component> accessories_compat$addThatItsNotReal(AbstractContainerScreen instance, ItemStack stack, Operation<List<Component>> original) {
+//        boolean displayStack = false;
+//
+//        if (this.hoveredSlot instanceof SlotTypeAccessible access) {
+//            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
+//
+//            if (ext != ICurioSlotExtension.DEFAULT) {
+//                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(this.hoveredSlot.getContainerSlot()));
+//
+//                stack = ext.getDisplayStack(ctx, stack);
+//
+//                displayStack = true;
+//            }
+//        }
+//
+//        List<Component> tooltips = new ArrayList<>(original.call(instance, stack));
+//
+//        if(displayStack) {
+//            tooltips.addLast(Component.literal("[Curios Displayed Stack]"));
+//        }
+//
+//        return tooltips;
+//    }
 }
