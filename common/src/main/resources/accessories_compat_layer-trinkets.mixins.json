@@ -33,7 +33,8 @@
     "client.AccessoriesExperimentalScreenMixin",
     "client.LivingEntityMixin",
     "client.LivingEntityRendererMixin",
-    "client.TrinketRendererRegistryMixin"
+    "client.TrinketRendererRegistryMixin",
+    "client.ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
