@@ -10,6 +10,7 @@ import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.data.EntitySlotLoader;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
+import io.wispforest.accessories_compat.AccessoriesCompatInit;
 import io.wispforest.accessories_compat.trinkets.utils.OuterGroupMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -52,8 +53,10 @@ public record WrappedTrinketComponent(LivingEntity entity) implements TrinketCom
         return new OuterGroupMap(TrinketsWrappingUtils.getGroupedSlots(entity.level().isClientSide(), entity.getType()),
                 this,
                 capability(),
-                (additionalMsg) -> {
-                    LOGGER.warn("Unable to get some value leading to an error, here comes the dumping data!");
+                (type, additionalMsg) -> {
+                    if (!AccessoriesCompatInit.CONFIG.dumpDataWhenNullEntries()) return;
+
+                    LOGGER.warn("Unable to get some value leading to a possible error, here comes the dumping data!");
                     LOGGER.warn("Entity: {}", this.entity());
                     LOGGER.warn("Entity Slots: {}", EntitySlotLoader.getEntitySlots(this.entity()));
                     LOGGER.warn("Current Containers: {}", capability().getContainers());

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -24,12 +25,12 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
     private final WrappedTrinketComponent trinketComponent;
     private final AccessoriesCapability capability;
 
-    private final Consumer<String> errorMessage;
+    private final BiConsumer<String, String> errorMessage;
 
     public OuterGroupMap(Map<String, Map<String, io.wispforest.accessories.api.slot.SlotType>> groupedAccessorySlots,
                          WrappedTrinketComponent trinketComponent,
                          AccessoriesCapability capability,
-                         Consumer<String> errorMessage) {
+                         BiConsumer<String, String> errorMessage) {
         this.groupedAccessorySlots = groupedAccessorySlots;
 
         this.trinketComponent = trinketComponent;
@@ -160,7 +161,7 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
             var groupMap = groupMap();
 
             if (groupMap == null) {
-                errorMessage.accept("Unable to locate the given group: [" + this.currentTrinketsGroup + "]");
+                errorMessage.accept("missing_groups", "Unable to locate the given group: [" + this.currentTrinketsGroup + "]");
 
                 return null;
             }
@@ -170,7 +171,7 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
             var slotType = groupMap.get(accessoryKey);
 
             if (slotType == null) {
-                errorMessage.accept("Unable to locate the given slot type: [Trinket Group: " + this.currentTrinketsGroup + ", Trinket Slot: " + trinketKey + "] : [Accessory Group: " + TrinketsWrappingUtils.trinketsToAccessories_Group(this.currentTrinketsGroup) + ", Accessory Slot: " + accessoryKey +"]");
+                errorMessage.accept("missing_group", "Unable to locate the given slot type: [Trinket Group: " + this.currentTrinketsGroup + ", Trinket Slot: " + trinketKey + "] : [Accessory Group: " + TrinketsWrappingUtils.trinketsToAccessories_Group(this.currentTrinketsGroup) + ", Accessory Slot: " + accessoryKey +"]");
 
                 return null;
             }
@@ -182,7 +183,7 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
             var container = OuterGroupMap.this.capability.getContainers().get(type.name());
 
             if(container == null) {
-                errorMessage.accept("Unable to get the required Accessories container to wrap for Trinkets API call: [Slot: " + type.name() + "]");
+                errorMessage.accept("missing_slots", "Unable to get the required Accessories container to wrap for Trinkets API call: [Slot: " + type.name() + "]");
 
                 return null;
             }
