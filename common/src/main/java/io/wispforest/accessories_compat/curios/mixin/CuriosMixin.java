@@ -52,7 +52,7 @@ public abstract class CuriosMixin {
 
     @WrapOperation(method = {"lambda$registerCaps$0", "lambda$registerCaps$1"}, at = @At(value = "INVOKE", target = "Ljava/util/Map;isEmpty()Z"))
     private static boolean checkIfValidForAccessories(Map instance, Operation<Boolean> original, @Local(ordinal = 0) LivingEntity livingEntity) {
-        return AccessoriesCapability.get(livingEntity) != null;
+        return AccessoriesCapability.get(livingEntity) == null;
     }
 
     @WrapOperation(method = "registerCaps", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/capabilities/RegisterCapabilitiesEvent;registerItem(Lnet/neoforged/neoforge/capabilities/ItemCapability;Lnet/neoforged/neoforge/capabilities/ICapabilityProvider;[Lnet/minecraft/world/level/ItemLike;)V"))
