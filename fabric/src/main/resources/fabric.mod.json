@@ -21,12 +21,6 @@
   "icon": "assets/${mod_id}/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "io.wispforest.accessories_compat.fabric.AccessoriesCompatFabricInit"
-    ],
-    "client": [
-      "io.wispforest.accessories_compat.fabric.client.AccessoriesCompatClientFabricInit"
-    ],
     "mixinsquared": [
       "io.wispforest.accessories_compat.curios.CuriosCompatMixinCanceller"
     ]

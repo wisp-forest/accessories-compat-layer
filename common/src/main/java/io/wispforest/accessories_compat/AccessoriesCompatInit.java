@@ -17,7 +17,7 @@ public class AccessoriesCompatInit {
     public static final AccessoriesCompatConfig CONFIG = AccessoriesCompatConfig.createAndLoad();
 
     public static void init() {
-        LOGGER.info(MODID + " is now loading!");
+        LOGGER.info("Setting up compat modules for Accessories!");
 
         if (LoaderPlatformUtils.INSTANCE.isModLoaded("trinkets")) {
             Reflection.initialize(TrinketsCompat.class);
