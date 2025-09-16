@@ -8,6 +8,7 @@
     "accessor.CuriosImplMixinHooksAccessor",
     "accessor.ItemizedCurioCapabilityAccessor",
     "accessor.SlotTypeBuilderAccessor",
+    "accessor.CurioAttributeModifierEventAccessor",
     "accessories.AccessoriesCapabilityImplMixin",
     "accessories.AccessoriesContainerImplAccessor",
     "accessories.SlotAttributeMixin",
