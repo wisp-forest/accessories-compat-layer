@@ -1,5 +1,4 @@
-import java.util.function.BiConsumer
-import java.util.function.BiFunction
+import io.wispforest.helpers.Extensions.fabricModule
 
 plugins {
     id("multiloader-mojmap")
@@ -48,16 +47,6 @@ repositories {
 }
 
 dependencies {
-    fun fabricModule(dependencyMethod: BiConsumer<Dependency, Action<Dependency>>, vararg moduleNames: String, action: Action<Dependency>? = null) {
-        for (moduleName in moduleNames) {
-            dependencyMethod.accept(fabricApi.module(moduleName, libs.versions.fabric.api.asProvider().get())){
-                (this as ModuleDependency).exclude(group = "fabric-api", module = "")
-
-                action?.execute(this)
-            }
-        }
-    }
-
     // Core Libs
     modImplementation(libs.fabric.loader)
     compileOnly(libs.mixin.extras.common)

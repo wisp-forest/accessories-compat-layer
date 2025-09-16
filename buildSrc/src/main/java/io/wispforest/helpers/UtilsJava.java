@@ -1,4 +1,4 @@
-package helpers;
+package io.wispforest.helpers;
 
 import org.gradle.api.Transformer;
 import org.jetbrains.annotations.NotNull;

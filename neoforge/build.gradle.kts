@@ -1,4 +1,5 @@
-import helpers.Utils
+import io.wispforest.helpers.Utils
+import io.wispforest.helpers.Extensions.modrinthImplementation
 import java.util.function.BiConsumer
 
 plugins {
@@ -63,6 +64,7 @@ repositories {
 dependencies {
     fun fabricModule(dependencyMethod: BiConsumer<Dependency, Action<Dependency>>, vararg moduleNames: String, action: Action<Dependency>? = null) {
         for (moduleName in moduleNames) {
+            libs
             dependencyMethod.accept(fabricApi.module(moduleName, libs.versions.fabric.api.asProvider().get())){
                 (this as ModuleDependency).exclude(group = "fabric-api", module = "")
 
@@ -97,10 +99,29 @@ dependencies {
     implementation(libs.mixin.squared.neoforge)
     include(libs.mixin.squared.neoforge)
 
+    modrinthImplementation("irons-spells-n-spellbooks" to "1.21.1-3.13.0")
+
+    modrinthImplementation(
+        "artifacts" to "13.0.7",
+        "cloth-config" to "15.0.140+neoforge",
+    )
+
+    modrinthImplementation("charm-of-undying" to "bfg1ghkD")
+
+    modrinthImplementation(
+        "malum" to "1.7.3.1",
+        "lodestonelib" to "1.7.1"
+    )
+
+    modrinthImplementation(
+        "sophisticated-backpacks" to "1.21.1-3.25.5.1357",
+        "sophisticated-core" to "1.21.1-1.3.71.1143"
+    )
+
     //modImplementation("de.mari_023:ae2wtlib:19.2.6")
     //modImplementation("de.mari_023:ae2wtlib_api:19.2.6")
-
     //modImplementation("org.appliedenergistics:appliedenergistics2:19.2.15")
+    //modrinthImplementation("guideme" to "21.1.14")
 }
 
 loom {

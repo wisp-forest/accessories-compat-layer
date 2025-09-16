@@ -1,13 +1,22 @@
-package helpers
+package io.wispforest.helpers
 
 import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.compileClasspath
+import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.fabricApi
+import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.fabricApi
 import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.sourceSets
 import net.fabricmc.loom.configuration.ide.RunConfigSettings
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.Transformer
+import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.ModuleDependency
+import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.the
+import java.util.function.BiConsumer
+import kotlin.text.get
 
 object Utils {
     fun getSetupRunsAction(project: Project): Action<NamedDomainObjectContainer<RunConfigSettings>> {

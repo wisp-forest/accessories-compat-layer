@@ -1,10 +1,7 @@
 import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.main
-import helpers.Utils
-import helpers.UtilsJava
-import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.internal.declarativedsl.parsing.main
-
-val libs get() = the<LibrariesForLibs>()
+import io.wispforest.helpers.Extensions.libs
+import io.wispforest.helpers.Utils
+import io.wispforest.helpers.UtilsJava
 
 plugins {
     id("architectury-plugin")
@@ -55,6 +52,7 @@ repositories {
     maven("https://maven.fabricmc.net/")
     maven("https://maven.architectury.dev/")
     maven("https://maven.neoforged.net/releases/")
+    maven("https://api.modrinth.com/maven")
     mavenCentral()
     gradlePluginPortal()
 }
