@@ -99,7 +99,11 @@ dependencies {
     implementation(libs.mixin.squared.neoforge)
     include(libs.mixin.squared.neoforge)
 
-    modrinthImplementation("irons-spells-n-spellbooks" to "1.21.1-3.13.0")
+    modrinthImplementation(
+        "irons-spells-n-spellbooks" to "1.21.1-3.13.0",
+        "geckolib" to "18qeSgOb",
+        "playeranimator" to "2.0.1+1.21.1-forge"
+    )
 
     modrinthImplementation(
         "artifacts" to "13.0.7",
@@ -107,6 +111,7 @@ dependencies {
     )
 
     modrinthImplementation("charm-of-undying" to "bfg1ghkD")
+    modImplementation("com.illusivesoulworks.spectrelib:spectrelib-neoforge:0.17.2+1.21")
 
     modrinthImplementation(
         "malum" to "1.7.3.1",

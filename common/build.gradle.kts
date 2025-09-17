@@ -53,10 +53,6 @@ dependencies {
     annotationProcessor(libs.mixin.extras.common)
     // --
 
-    // General Libs
-    modApi(libs.owolib.fabric)
-    annotationProcessor(libs.owolib.fabric)
-
     fabricModule(this::modCompileOnlyApi, "fabric-api-base")
     // --
 
