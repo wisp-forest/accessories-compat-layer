@@ -62,7 +62,7 @@ public class AccessoriesEventHooks {
         });
 
         AdjustAttributeModifierCallback.EVENT.register((stack, reference, builder) -> {
-            var slotLocation = ResourceLocation.fromNamespaceAndPath(CuriosConstants.MOD_ID, AccessoryAttributeBuilder.createSlotPath(reference));
+            var slotLocation = ResourceLocation.fromNamespaceAndPath(CuriosConstants.MOD_ID, reference.createSlotPath());
 
             var attributes = builder.getAttributeModifiers(false);
 
@@ -77,7 +77,7 @@ public class AccessoriesEventHooks {
 
                 @Override
                 public boolean remove(Object key, Object value) {
-                    builder.removeExclusive((Holder<Attribute>) key, (ResourceLocation) value);
+                    builder.removeExclusive((Holder<Attribute>) key, ((AttributeModifier) value).id());
 
                     return true;
                 }
