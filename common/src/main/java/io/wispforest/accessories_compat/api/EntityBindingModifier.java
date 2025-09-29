@@ -6,17 +6,15 @@ import io.wispforest.accessories_compat.api.tags.CollectionAddition;
 import net.minecraft.world.entity.EntityType;
 import org.slf4j.Logger;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public interface EntityBindingModifier {
 
     Logger LOGGER = LogUtils.getLogger();
 
-    static EntityBindingModifier from(Map<String, SlotType> slotTypes, Map<EntityType<?>, Map<String, SlotType>> bindingEntries) {
+    static EntityBindingModifier from(Map<String, SlotType> slotTypes, LinkedHashMap<EntityType<?>, SequencedMap<String, SlotType>> bindingEntries) {
         return type -> {
-            var entityBindings = bindingEntries.computeIfAbsent(type, entityType -> new HashMap<>());
+            var entityBindings = bindingEntries.computeIfAbsent(type, entityType -> new LinkedHashMap<>());
 
             return new CollectionAddition<>() {
                 @Override

@@ -1,3 +1,4 @@
+import io.wispforest.helpers.Extensions.fabricModule
 import io.wispforest.helpers.Utils
 import io.wispforest.helpers.Extensions.modrinthImplementation
 import java.util.function.BiConsumer
@@ -62,17 +63,6 @@ repositories {
 }
 
 dependencies {
-    fun fabricModule(dependencyMethod: BiConsumer<Dependency, Action<Dependency>>, vararg moduleNames: String, action: Action<Dependency>? = null) {
-        for (moduleName in moduleNames) {
-            libs
-            dependencyMethod.accept(fabricApi.module(moduleName, libs.versions.fabric.api.asProvider().get())){
-                (this as ModuleDependency).exclude(group = "fabric-api", module = "")
-
-                action?.execute(this)
-            }
-        }
-    }
-
     "common"(project(":common", "namedElements")) { this.setTransitive(false) }
     "shadowCommon"(project(":common", "transformProductionNeoForge")) { this.setTransitive(false) }
 

@@ -25,7 +25,7 @@ public abstract class SlotGroupLoaderMixin {
     private void injectTrinketsGroupingInfo(Map<ResourceLocation, JsonObject> data, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
                                             @Local(name = "slotGroups", ordinal = 0) HashMap<String, SlotGroupLoader.SlotGroupBuilder> slotGroups,
                                             @Local(name = "allSlots", ordinal = 1) HashMap<String, SlotType> allSlots,
-                                            @Local(name = "remainSlots") HashSet<String> remainSlots) {
+                                            @Local(name = "remainSlots") HashSet<SlotType> remainSlots) {
         for (var groupEntry : ((SlotLoaderAccessor) SlotLoader.INSTANCE).getLoadedSlots().entrySet()) {
             var groupData = groupEntry.getValue();
             Set<String> slotNames = groupData.getSlots().keySet();
@@ -33,7 +33,9 @@ public abstract class SlotGroupLoaderMixin {
             for (var slotName : slotNames) {
                 var accessorySlotName = TrinketsWrappingUtils.trinketsToAccessories_Slot(Optional.of(groupEntry.getKey()), slotName);
 
-                if(!allSlots.containsKey(accessorySlotName)) continue;
+                var slot = allSlots.remove(accessorySlotName);
+
+                if(slot == null) continue;
 
                 var groupName = TrinketsWrappingUtils.trinketsToAccessories_Group(groupEntry.getKey());
 
@@ -46,10 +48,8 @@ public abstract class SlotGroupLoaderMixin {
                     slotGroups.put(groupName, group);
                 }
 
-                group.addSlot(accessorySlotName);
-
-                allSlots.remove(accessorySlotName);
-                remainSlots.remove(accessorySlotName);
+                group.addSlot(slot);
+                remainSlots.remove(slot);
             }
         }
     }
