@@ -3,6 +3,7 @@ package io.wispforest.accessories_compat.utils;
 import com.mojang.datafixers.util.Pair;
 import io.wispforest.accessories.api.menu.AccessoriesBasedSlot;
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,7 +23,11 @@ public class SlotRenderingUtils {
                 } catch (Exception ignored) {}
             }
 
-            instance.blit(location, x, y, blitOffset, 0, 0, width, height, width, height);
+            var texture = Minecraft.getInstance().getTextureManager().getTexture(location);
+
+            if (texture != MissingTextureAtlasSprite.getTexture()) {
+                instance.blit(location, x, y, blitOffset, 0, 0, width, height, width, height);
+            }
 
             return true;
         }

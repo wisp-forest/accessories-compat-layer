@@ -9,12 +9,16 @@ import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+
 public class AccessoriesCompatInit {
 
     public static final String MODID = "accessories_compat_layer";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
     public static final AccessoriesCompatConfig CONFIG = AccessoriesCompatConfig.createAndLoad();
+
+    public static final Set<String> defaultSlots = Set.of("anklet", "back", "belt", "cape", "charm", "face", "hand", "hat", "necklace", "ring", "shoes", "wrist");
 
     public static void init() {
         LOGGER.info("Setting up compat modules for Accessories!");

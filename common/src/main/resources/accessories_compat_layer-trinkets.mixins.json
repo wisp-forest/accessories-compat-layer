@@ -29,8 +29,6 @@
   ],
   "client": [
     "client.ItemStackMixin",
-    "client.AbstractContainerScreenMixin",
-    "client.AccessoriesExperimentalScreenMixin",
     "client.LivingEntityMixin",
     "client.LivingEntityRendererMixin",
     "client.TrinketRendererRegistryMixin",

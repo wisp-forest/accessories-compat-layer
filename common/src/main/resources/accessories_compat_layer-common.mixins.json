@@ -17,7 +17,9 @@
     "owo.ConfigWrapperMixin"
   ],
   "client": [
-    "client.AccessoriesRendererRegistryMixin"
+    "client.AccessoriesRendererRegistryMixin",
+    "client.AbstractContainerScreenMixin",
+    "client.AccessoriesExperimentalScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

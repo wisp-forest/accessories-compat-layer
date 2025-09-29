@@ -34,7 +34,9 @@
     "client.CuriosClientPayloadHandlerMixin",
     "client.CuriosButtonMixin",
     "client.CuriosClientPayloadHandlerMixin",
-    "client.AbstractContainerScreenMixin"
+    "client.AbstractContainerScreenMixin",
+    "client.AccessoriesExperimentalScreenMixin",
+    "client.SlotComponentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

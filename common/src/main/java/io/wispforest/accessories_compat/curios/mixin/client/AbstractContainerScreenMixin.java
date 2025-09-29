@@ -4,8 +4,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.wispforest.accessories.menu.SlotTypeAccessible;
 import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -23,45 +25,69 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow @Nullable
     protected Slot hoveredSlot;
 
-//    @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;getItem()Lnet/minecraft/world/item/ItemStack;"))
-//    private ItemStack accessories_compat$adjustDisplayStack(Slot instance, Operation<ItemStack> original) {
-//        var stack = original.call(instance);
-//
-//        if (instance instanceof SlotTypeAccessible access) {
-//            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
-//
-//            if (ext != ICurioSlotExtension.DEFAULT) {
-//                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(instance.getContainerSlot()));
-//
-//                stack = ext.getDisplayStack(ctx, stack);
-//            }
-//        }
-//
-//        return stack;
-//    }
-//
-//    @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;getTooltipFromContainerItem(Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;"))
-//    private List<Component> accessories_compat$addThatItsNotReal(AbstractContainerScreen instance, ItemStack stack, Operation<List<Component>> original) {
-//        boolean displayStack = false;
-//
-//        if (this.hoveredSlot instanceof SlotTypeAccessible access) {
-//            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
-//
-//            if (ext != ICurioSlotExtension.DEFAULT) {
-//                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(this.hoveredSlot.getContainerSlot()));
-//
-//                stack = ext.getDisplayStack(ctx, stack);
-//
-//                displayStack = true;
-//            }
-//        }
-//
-//        List<Component> tooltips = new ArrayList<>(original.call(instance, stack));
-//
-//        if(displayStack) {
-//            tooltips.addLast(Component.literal("[Curios Displayed Stack]"));
-//        }
-//
-//        return tooltips;
-//    }
+    @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;getItem()Lnet/minecraft/world/item/ItemStack;"))
+    private ItemStack accessories_compat$adjustDisplayStack(Slot instance, Operation<ItemStack> original) {
+        var stack = original.call(instance);
+
+        if (instance instanceof SlotTypeAccessible access) {
+            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
+
+            if (ext != ICurioSlotExtension.DEFAULT) {
+                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(instance.getContainerSlot()));
+
+                stack = ext.getDisplayStack(ctx, stack);
+            }
+        }
+
+        return stack;
+    }
+
+    @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;hasItem()Z"))
+    private boolean accessories$hasAnyItem(Slot instance, Operation<Boolean> original) {
+        var stack = ItemStack.EMPTY;
+
+        if (instance instanceof SlotTypeAccessible access) {
+            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
+
+            if (ext != ICurioSlotExtension.DEFAULT) {
+                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(instance.getContainerSlot()));
+
+                stack = ext.getDisplayStack(ctx, instance.getItem());
+            }
+        }
+
+        return original.call(instance) || !stack.isEmpty();
+    }
+
+    @WrapOperation(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;getTooltipFromContainerItem(Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;"))
+    private List<Component> accessories_compat$addThatItsNotReal(AbstractContainerScreen instance, ItemStack stack, Operation<List<Component>> original) {
+        boolean displayStack = false;
+
+        if (this.hoveredSlot instanceof SlotTypeAccessible access) {
+            var ext = ICurioSlotExtension.from(CuriosConversionUtils.slotConvertToA(access.slotName()));
+
+            if (ext != ICurioSlotExtension.DEFAULT) {
+                var ctx = CuriosConversionUtils.objectsConvertToC(access.getContainer().createReference(this.hoveredSlot.getContainerSlot()));
+
+                stack = ext.getDisplayStack(ctx, stack);
+
+                displayStack = true;
+            }
+        }
+
+        List<Component> tooltips = new ArrayList<>(original.call(instance, stack));
+
+        if(displayStack) {
+            tooltips.addLast(Component.empty());
+            tooltips.addLast(ComponentUtils.formatList(
+                List.of(
+                    Component.literal("[").withStyle(ChatFormatting.GRAY),
+                    Component.literal("Curios Displayed Stack").withStyle(ChatFormatting.GOLD),
+                    Component.literal("]").withStyle(ChatFormatting.GRAY)
+                ), Component.empty()
+            ));
+        }
+
+        return tooltips;
+    }
 }

@@ -13,6 +13,7 @@ import io.wispforest.accessories.api.slot.SlotType;
 import io.wispforest.accessories.data.EntitySlotLoader;
 import io.wispforest.accessories.data.SlotGroupLoader;
 import io.wispforest.accessories.data.SlotTypeLoader;
+import io.wispforest.accessories_compat.AccessoriesCompatInit;
 import io.wispforest.accessories_compat.trinkets.pond.SlotGroupExtension;
 import io.wispforest.accessories_compat.utils.ImmutableDelegatingMap;
 import it.unimi.dsi.fastutil.Pair;
@@ -111,10 +112,8 @@ public class TrinketsWrappingUtils {
         return foundGroup;
     }
 
-    public static final Set<String> defaultSlots = Set.of("anklet", "back", "belt", "cape", "charm", "face", "hand", "hat", "necklace", "ring", "shoes", "wrist");
-
     public static SequencedCollection<String> getGroupFromDefaultSlot(String slot) {
-        if (!defaultSlots.contains(slot)) return List.of();
+        if (!AccessoriesCompatInit.defaultSlots.contains(slot)) return List.of();
 
         return switch (slot) {
             case "anklet", "shoes" -> List.of("feet");
@@ -138,7 +137,7 @@ public class TrinketsWrappingUtils {
             default -> trinketType;
         };
 
-        if(defaultSlots.contains(accessoriesType)) return Either.right(accessoriesType);
+        if(AccessoriesCompatInit.defaultSlots.contains(accessoriesType)) return Either.right(accessoriesType);
 
         if(group.isPresent()) accessoriesType = "trinket_group_" + group.get() + "-" + accessoriesType;
 

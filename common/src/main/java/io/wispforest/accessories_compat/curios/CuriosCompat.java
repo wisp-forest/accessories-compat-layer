@@ -101,7 +101,7 @@ public class CuriosCompat extends ModCompatibilityModule {
                 builder.alternativeTranslation("curios.identifier." + curiosId);
             }
 
-            if (accessor.getSize() != null && slotsCurrentSize != null && accessor.getSize() > slotsCurrentSize) {
+            if (accessor.getSize() != null && slotsCurrentSize != null && (!AccessoriesCompatInit.defaultSlots.contains(accessoriesId) || accessor.getSize() > slotsCurrentSize)) {
                 builder.amount(accessor.getSize());
             }
 
