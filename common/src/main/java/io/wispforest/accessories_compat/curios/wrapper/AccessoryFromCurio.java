@@ -13,6 +13,7 @@ import io.wispforest.accessories.api.slot.SlotReference;
 import io.wispforest.accessories.api.slot.SlotType;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -104,15 +105,32 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
 
     @Override
     public void getDynamicModifiers(ItemStack stack, SlotReference reference, AccessoryAttributeBuilder builder) {
-        var ctx = objectsConvertToC(reference);
-
         Accessory.super.getDynamicModifiers(stack, reference, builder);
 
         //--
 
-        var id = ResourceLocation.fromNamespaceAndPath(CuriosConstants.MOD_ID, reference.createSlotPath());
+        iCurio(stack).ifPresent(iCurio -> {
+            var ctx = objectsConvertToC(reference);
 
-        iCurio(stack).ifPresent(iCurio -> iCurio.getAttributeModifiers(ctx, id).forEach(builder::addExclusive));
+            var id = ResourceLocation.fromNamespaceAndPath(CuriosConstants.MOD_ID, reference.createSlotPath());
+            var idStr = id.toString();
+
+            var attributes = iCurio.getAttributeModifiers(ctx, id);
+
+            attributes.forEach((attribute, modifier) -> {
+                var modifierIdStr = modifier.id().toString();
+
+                if (modifierIdStr.contains(idStr)) {
+                    var path = modifierIdStr.replace(idStr, "");
+
+                    var itemId = BuiltInRegistries.ITEM.getKey(stack.getItem().asItem());
+
+                    builder.addStackable(attribute, itemId.withPath("/attribute/").withPath(path), modifier.amount(), modifier.operation());
+                } else {
+                    builder.addExclusive(attribute, modifier);
+                }
+            });
+        });
     }
 
     @Override
@@ -137,10 +155,8 @@ public class AccessoryFromCurio implements Accessory, LootingAdjustment, Fortune
     @Override
     @Nullable
     public SoundEventData getEquipSound(ItemStack stack, SlotReference reference) {
-        var ctx = objectsConvertToC(reference);
-
         return this.iCurio(stack)
-                .map(iCurio -> iCurio.getEquipSound(ctx))
+                .map(iCurio -> iCurio.getEquipSound(objectsConvertToC(reference)))
                 .map(info -> new SoundEventData(Holder.direct(info.soundEvent()), info.volume(), info.pitch()))
                 .orElse(Accessory.super.getEquipSound(stack, reference));
     }
