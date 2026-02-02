@@ -12,6 +12,7 @@
     "accessories.AccessoriesCapabilityImplMixin",
     "accessories.AccessoriesContainerImplAccessor",
     "accessories.SlotAttributeMixin",
+    "accessories.AccessoriesEventHandlerMixin",
     "CurioCanUnequipEventMixin",
     "CurioInventoryCapabilityMixin",
     "CurioInventoryMixin",

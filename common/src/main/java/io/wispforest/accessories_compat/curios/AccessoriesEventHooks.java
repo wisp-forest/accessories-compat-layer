@@ -138,7 +138,7 @@ public class AccessoriesEventHooks {
         DeathWrapperEventsImpl.init();
     }
 
-    private static class DeathWrapperEventsImpl implements OnDeathCallback, OnDropCallback {
+    public static class DeathWrapperEventsImpl implements OnDeathCallback, OnDropCallback {
 
         public static final DeathWrapperEventsImpl INSTANCE = new DeathWrapperEventsImpl();
 
@@ -149,6 +149,16 @@ public class AccessoriesEventHooks {
 
         @Nullable
         private DropRulesEvent latestDropRules = null;
+
+        public void collectDropRules(LivingEntity entity, DamageSource damageSource) {
+            var handler = new CurioInventoryCapability(entity);
+
+            this.latestDropRules = NeoForge.EVENT_BUS.post(new DropRulesEvent(entity, handler, damageSource, 0, false));
+        }
+
+        public void removeDropRules() {
+            this.latestDropRules = null;
+        }
 
         @Override
         public net.fabricmc.fabric.api.util.TriState shouldDrop(net.fabricmc.fabric.api.util.TriState currentState, LivingEntity entity, AccessoriesCapability capability, DamageSource damageSource, List<ItemStack> droppedStacks) {
@@ -173,11 +183,7 @@ public class AccessoriesEventHooks {
 
             droppedStacks.addAll(itemEntities.stream().map(ItemEntity::getItem).toList());
 
-            if(dropEventTest.isCanceled()) return net.fabricmc.fabric.api.util.TriState.FALSE;
-
-            this.latestDropRules = NeoForge.EVENT_BUS.post(new DropRulesEvent(entity, handler, damageSource, 0, false));
-
-            return net.fabricmc.fabric.api.util.TriState.DEFAULT;
+            return (dropEventTest.isCanceled()) ? net.fabricmc.fabric.api.util.TriState.FALSE : net.fabricmc.fabric.api.util.TriState.DEFAULT;
         }
 
         @Override
