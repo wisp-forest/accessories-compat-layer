@@ -9,6 +9,7 @@
     "AccessoriesAPIMixin",
     "AccessoriesEventHandlerMixin",
     "AccessoriesForgeMixin",
+    "AccessoriesNetworkingMixin",
     "AccessoryMixin",
     "DataLoaderBaseMixin",
     "EntitySlotLoaderMixin",
@@ -19,7 +20,8 @@
   "client": [
     "client.AccessoriesRendererRegistryMixin",
     "client.AbstractContainerScreenMixin",
-    "client.AccessoriesExperimentalScreenMixin"
+    "client.AccessoriesExperimentalScreenMixin",
+    "client.AccessoriesNetworkingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

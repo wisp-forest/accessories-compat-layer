@@ -7,6 +7,7 @@ import io.wispforest.accessories.api.DropRule;
 import io.wispforest.accessories.api.data.AccessoriesBaseData;
 import io.wispforest.accessories.api.slot.SlotReference;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
+import io.wispforest.accessories_compat.AccessoriesCompatInit;
 import io.wispforest.accessories_compat.curios.pond.SlotContextExtension;
 import io.wispforest.accessories_compat.utils.ImmutableDelegatingMap;
 import io.wispforest.accessories_compat.utils.MapComparator;
@@ -73,7 +74,7 @@ public class CuriosConversionUtils {
 
     public static String slotConvertToA(String curiosType) {
         return switch (curiosType) {
-            case "curio" -> "any";
+            case "curio" -> AccessoriesCompatInit.CONFIG.addPocketSlot() ? "pocket" : "any";
             case "head" -> "hat";
             case "body" -> "cape";
             case "bracelet" -> "wrist";
@@ -85,7 +86,7 @@ public class CuriosConversionUtils {
 
     public static String slotConvertToC(String accessoriesType) {
         return switch (accessoriesType) {
-            case "any" -> "curio";
+            case "pocket", "any" -> "curio";
             case "hat" -> "head";
             case "cape" -> "body";
             case "wrist" -> "bracelet";

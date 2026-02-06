@@ -22,4 +22,6 @@ public interface GeneralPlatformUtils {
 
         return loadedService;
     }
+
+    void registerCompatPack();
 }

@@ -20,4 +20,8 @@ public class AccessoriesCompatConfigModel {
     public List<SlotIdRedirect> slotIdRedirects = new ArrayList<>(List.of(new SlotIdRedirect("charm/spell_book", "spellbook", 1)));
 
     public boolean dumpDataWhenNullEntries = false;
+
+    @SectionHeader("curios")
+    public boolean addPocketSlot = false;
+    public boolean showPocketSlotInTooltip = false;
 }

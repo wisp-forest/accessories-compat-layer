@@ -28,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class TrinketsCompat extends ModCompatibilityModule {
 
@@ -87,6 +88,8 @@ public class TrinketsCompat extends ModCompatibilityModule {
 
     @Override
     public void addSlotTypes(SlotTypesModifier modifier) {
+        exportedSlotsServer.clear();
+
         var redirects = SlotIdRedirect.getMap(AccessoriesCompatInit.CONFIG.slotIdRedirects());
 
         for (var groupDataEntry : ((SlotLoaderAccessor) SlotLoader.INSTANCE).getLoadedSlots().entrySet()) {
@@ -98,9 +101,17 @@ public class TrinketsCompat extends ModCompatibilityModule {
             for (var entry : slots.entrySet()) {
                 Pair<String, Integer> redirect = redirects.get(groupName + "/" + entry.getKey());
 
-                var accessoryType = redirect != null
-                    ? redirect.key()
-                    : TrinketsWrappingUtils.trinketsToAccessories_Slot(Optional.of(groupName), entry.getKey());
+                String accessoryType;
+
+                if (redirect != null) {
+                    accessoryType = redirect.key();
+                } else {
+                    var either = TrinketsWrappingUtils.trinketsToAccessories_SlotEither(Optional.of(groupName), entry.getKey());
+
+                    if (either.left().isPresent()) exportedSlotsServer.add(either.left().get());
+
+                    accessoryType = either.map(Function.identity(), Function.identity());
+                }
 
                 var slotData = entry.getValue();
 

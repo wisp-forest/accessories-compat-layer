@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class TrinketsWrappingUtils {
 
@@ -127,7 +128,7 @@ public class TrinketsWrappingUtils {
 
     // Unsafe Operation
     public static String trinketsToAccessories_Slot(Optional<String> group, String trinketType){
-        return trinketsToAccessories_SlotEither(group, trinketType).map(string -> string, string -> string);
+        return trinketsToAccessories_SlotEither(group, trinketType).map(Function.identity(), Function.identity());
     }
 
     public static Either<String, String> trinketsToAccessories_SlotEither(Optional<String> group, String trinketType){

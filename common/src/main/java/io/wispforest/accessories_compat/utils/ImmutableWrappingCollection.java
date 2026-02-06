@@ -18,7 +18,7 @@ public class ImmutableWrappingCollection<V, T> extends AbstractCollection<T> imp
     final Function<V, T> toCollectionType;
     final BiPredicate<Collection<V>, T> containsCheck;
 
-    public ImmutableWrappingCollection(Set<V> collection, Function<Set<V>, Iterator<V>> sortIterator, Function<V, T> toCollectionType, BiPredicate<Collection<V>, T> containsCheck) {
+    public ImmutableWrappingCollection(Set<V> collection, @Nullable Function<Set<V>, Iterator<V>> sortIterator, Function<V, T> toCollectionType, BiPredicate<Collection<V>, T> containsCheck) {
         this.collection = collection;
         this.sortIterator = sortIterator;
         this.toCollectionType = toCollectionType;

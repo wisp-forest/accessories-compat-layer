@@ -125,6 +125,11 @@ dependencies {
         "forge-config-api-port" to "v21.1.4-1.21.1-Fabric",
         "puzzles-lib" to "v21.1.38-1.21.1-Fabric"
     )
+
+    modrinthImplementation(
+        "inmis" to "2.8.2-1.21.1",
+        "cloth-config" to "15.0.140+fabric",
+    )
 }
 
 loom {

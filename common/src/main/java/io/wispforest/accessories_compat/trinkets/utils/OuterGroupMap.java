@@ -71,21 +71,31 @@ public class OuterGroupMap implements Map<String, Map<String, TrinketInventory>>
     @Override
     @NotNull
     public Set<String> keySet() {
-        return this.groupedAccessorySlots.keySet().stream().map(TrinketsWrappingUtils::accessoriesToTrinkets_Group).collect(Collectors.toSet());
+        var set = new HashSet<String>();
+        for (var s : this.groupedAccessorySlots.keySet()) set.add(TrinketsWrappingUtils.accessoriesToTrinkets_Group(s));
+        return set;
     }
 
     @Override
     @NotNull
     public Collection<Map<String, TrinketInventory>> values() {
-        return this.keySet().stream().<Map<String, TrinketInventory>>map(InnerSlotMap::new).toList();
+        return (Collection<Map<String, TrinketInventory>>) (Object) new ImmutableWrappingCollection<String, InnerSlotMap>(
+            this.keySet(),
+            null,
+            InnerSlotMap::new,
+            (strings, innerMap) -> strings.contains(innerMap.currentTrinketsGroup)
+        );
     }
 
     @Override
     @NotNull
     public Set<Entry<String, Map<String, TrinketInventory>>> entrySet() {
-        return this.keySet().stream()
-            .map(string -> Map.entry(string, (Map<String, TrinketInventory>) new InnerSlotMap(string)))
-            .collect(Collectors.toSet());
+        return (Set<Entry<String, Map<String, TrinketInventory>>>) (Object) new ImmutableWrappingCollection<String, Entry<String, InnerSlotMap>>(
+            this.keySet(),
+            null,
+            string -> Map.entry(string, new InnerSlotMap(string)),
+            (strings, entry) -> strings.contains(entry.getValue().currentTrinketsGroup)
+        );
     }
 
     @Override public @Nullable Map<String, TrinketInventory> put(String key, Map<String, TrinketInventory> value) { return null; }

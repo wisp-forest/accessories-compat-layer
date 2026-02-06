@@ -4,6 +4,7 @@ import com.google.common.reflect.Reflection;
 import io.wispforest.accessories_compat.common.AccessoriesCompatConfig;
 import io.wispforest.accessories_compat.curios.CuriosCompat;
 import io.wispforest.accessories_compat.trinkets.TrinketsCompat;
+import io.wispforest.accessories_compat.utils.GeneralPlatformUtils;
 import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ public class AccessoriesCompatInit {
         if (LoaderPlatformUtils.INSTANCE.isModLoaded("curios")) {
             Reflection.initialize(CuriosCompat.class);
         }
+
+        GeneralPlatformUtils.INSTANCE.registerCompatPack();
     }
 
     //--

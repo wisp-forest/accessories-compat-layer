@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,9 +44,9 @@ public record AccessoriesBasedCurioSlot(SlotType slotType) implements ISlotType 
 
     @Override
     public Set<ResourceLocation> getValidators() {
-        return this.slotType.validators().stream()
-                .map(CuriosConversionUtils::predicateIdConvertToC)
-                .collect(Collectors.toSet());
+        var set = new HashSet<ResourceLocation>();
+        for (var location : this.slotType.validators()) set.add(CuriosConversionUtils.predicateIdConvertToC(location));
+        return set;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.accessories.api.AccessoriesCapability;
+import io.wispforest.accessories.api.AccessoriesContainer;
 import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import io.wispforest.accessories_compat.curios.pond.CurioInventoryCapabilityExtension;
 import io.wispforest.accessories_compat.curios.pond.CurioInventoryExtension;
@@ -23,6 +24,8 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.common.capability.CurioInventory;
 import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,9 +119,10 @@ public abstract class CurioInventoryCapabilityMixin implements CurioInventoryCap
      */
     @Overwrite(remap = false)
     public Set<ICurioStacksHandler> getUpdatingInventories() {
-        return ((AccessoriesCapabilityImpl) this.capability.getHolder()).getUpdatingInventories().keySet()
-            .stream()
-            .map(container -> new AccessoriesBasedStackHandler(container))
-            .collect(Collectors.toUnmodifiableSet());
+        var set = new HashSet<ICurioStacksHandler>();
+        for (var container : ((AccessoriesCapabilityImpl) this.capability.getHolder()).getUpdatingInventories().keySet()) {
+            set.add(new AccessoriesBasedStackHandler(container));
+        }
+        return Collections.unmodifiableSet(set);
     }
 }

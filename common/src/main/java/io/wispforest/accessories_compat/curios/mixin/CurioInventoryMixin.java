@@ -61,7 +61,6 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
             if (holder != null) return holder.invalidStacks;
         }
 
-
         return List.of();
     }
 
@@ -156,17 +155,18 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
 
     @Unique
     private static List<ItemStack> deserializeNBT_Stacks(LivingEntity livingEntity, @Nullable AccessoriesContainer container, Function<AccessoriesContainer, Container> containerFunc, CompoundTag nbt){
-        var list = nbt.getList("Items", Tag.TAG_COMPOUND)
-            .stream()
-            .map(tagEntry -> ItemStack.parseOptional(livingEntity.registryAccess(), (tagEntry instanceof CompoundTag compoundTag) ? compoundTag : new CompoundTag()))
-            .toList();
+        var decodedItems = new ArrayList<ItemStack>();
+
+        for (var tagEntry : nbt.getList("Items", Tag.TAG_COMPOUND)) {
+            decodedItems.add(ItemStack.parseOptional(livingEntity.registryAccess(), (tagEntry instanceof CompoundTag compoundTag) ? compoundTag : new CompoundTag()));
+        }
 
         var dropped = new ArrayList<ItemStack>();
 
         if(container != null) {
             var accessories = containerFunc.apply(container);
 
-            for (var stack : list) {
+            for (var stack : decodedItems) {
                 boolean consumedStack = false;
 
                 for (int i = 0; i < accessories.getContainerSize() && !consumedStack; i++) {
@@ -182,7 +182,7 @@ public abstract class CurioInventoryMixin implements CurioInventoryExtension {
                 if (!consumedStack) dropped.add(stack.copy());
             }
         } else {
-            dropped.addAll(list);
+            dropped.addAll(decodedItems);
         }
 
         return dropped;

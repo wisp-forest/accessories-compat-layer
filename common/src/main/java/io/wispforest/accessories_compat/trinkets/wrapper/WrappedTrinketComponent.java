@@ -8,6 +8,7 @@ import dev.emi.trinkets.api.*;
 
 import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.AccessoriesCapability;
+import io.wispforest.accessories.api.slot.SlotEntryReference;
 import io.wispforest.accessories.data.EntitySlotLoader;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import io.wispforest.accessories_compat.AccessoriesCompatInit;
@@ -101,34 +102,32 @@ public record WrappedTrinketComponent(LivingEntity entity) implements TrinketCom
 
     @Override
     public List<Tuple<SlotReference, ItemStack>> getEquipped(Predicate<ItemStack> predicate) {
-        var equipped = capability().getEquipped(predicate);
+        var list = new ArrayList<Tuple<SlotReference, ItemStack>>();
 
-        return equipped.stream()
-                .map(slotResult -> {
-                    var reference = TrinketsWrappingUtils.createTrinketsReference(slotResult.reference());
+        for (var slotEntryReference : capability().getEquipped(predicate)) {
+            TrinketsWrappingUtils.createTrinketsReference(slotEntryReference.reference())
+                .map(slotReference -> new Tuple<>(
+                    slotReference,
+                    slotEntryReference.stack()
+                )).ifPresent(list::add);
+        }
 
-                    return reference.map(slotReference -> new Tuple<>(
-                            slotReference,
-                            slotResult.stack()
-                    )).orElse(null);
-                })
-                .filter(Objects::nonNull)
-                .toList();
+        return list;
     }
 
     @Override
     public List<Tuple<SlotReference, ItemStack>> getAllEquipped() {
-        return capability().getAllEquipped().stream()
-                .map(slotResult -> {
-                    var reference = TrinketsWrappingUtils.createTrinketsReference(slotResult.reference());
+        var list = new ArrayList<Tuple<SlotReference, ItemStack>>();
 
-                    return reference.map(slotReference -> new Tuple<>(
-                            slotReference,
-                            slotResult.stack()
-                    )).orElse(null);
-                })
-                .filter(Objects::nonNull)
-                .toList();
+        for (var slotEntryReference : capability().getAllEquipped()) {
+            TrinketsWrappingUtils.createTrinketsReference(slotEntryReference.reference())
+                .map(slotReference -> new Tuple<>(
+                    slotReference,
+                    slotEntryReference.stack()
+                )).ifPresent(list::add);
+        }
+
+        return list;
     }
 
     @Override

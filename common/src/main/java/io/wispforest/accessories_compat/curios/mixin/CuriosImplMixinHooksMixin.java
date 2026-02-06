@@ -12,7 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.EntityCapability;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,6 +27,7 @@ import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.mixin.CuriosImplMixinHooks;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -120,7 +120,8 @@ public abstract class CuriosImplMixinHooksMixin {
      */
     @Overwrite(remap = false)
     public static boolean testCurioPredicates(Set<ResourceLocation> predicates, SlotResult slotResult) {
-        predicates = predicates.stream().map(CuriosConversionUtils::convertToA).collect(Collectors.toSet());
+        var convertedPredicates = new HashSet<ResourceLocation>();
+        for (var predicate : predicates) convertedPredicates.add(CuriosConversionUtils.convertToA(predicate));
 
         var ctx = slotResult.slotContext();
 
@@ -130,7 +131,7 @@ public abstract class CuriosImplMixinHooksMixin {
         SlotType slotType = SlotContextExtension.from(ctx).slotType();
 
         try {
-            return AccessoriesAPI.getPredicateResults(predicates, level, livingEntity, slotType, ctx.index(), slotResult.stack());
+            return AccessoriesAPI.getPredicateResults(convertedPredicates, level, livingEntity, slotType, ctx.index(), slotResult.stack());
         } catch (Exception ignored) {}
 
         return false;

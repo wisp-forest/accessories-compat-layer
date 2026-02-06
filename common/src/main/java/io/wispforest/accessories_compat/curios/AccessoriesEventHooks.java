@@ -5,6 +5,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import io.wispforest.accessories.api.AccessoriesCapability;
+import io.wispforest.accessories.api.AccessoriesContainer;
 import io.wispforest.accessories.api.DropRule;
 import io.wispforest.accessories.api.attributes.AccessoryAttributeBuilder;
 import io.wispforest.accessories.api.events.*;
@@ -50,9 +51,11 @@ public class AccessoriesEventHooks {
         ContainersChangeCallback.EVENT.register((livingEntity, capability, changedContainers) -> {
             if (changedContainers.isEmpty()) return;
 
-            var convertedSlots = changedContainers.keySet().stream()
-                    .map(container -> CuriosConversionUtils.slotConvertToC(container.getSlotName()))
-                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            var convertedSlots = new LinkedHashSet<String>();
+
+            for (var container : changedContainers.keySet()) {
+                convertedSlots.add(CuriosConversionUtils.slotConvertToC(container.getSlotName()));
+            }
 
             NeoForge.EVENT_BUS.post(new SlotModifiersUpdatedEvent(livingEntity, convertedSlots));
         });
@@ -164,24 +167,23 @@ public class AccessoriesEventHooks {
         public net.fabricmc.fabric.api.util.TriState shouldDrop(net.fabricmc.fabric.api.util.TriState currentState, LivingEntity entity, AccessoriesCapability capability, DamageSource damageSource, List<ItemStack> droppedStacks) {
             var handler = new CurioInventoryCapability(entity);
 
-            var itemEntities = droppedStacks.stream()
-                    .map(stack -> {
-                        var itemEntity = EntityType.ITEM.create(entity.level());
+            var itemEntities = new ArrayList<ItemEntity>();
 
-                        if(itemEntity == null) return null;
+            for (var droppedStack : droppedStacks) {
+                var itemEntity = EntityType.ITEM.create(entity.level());
 
-                        itemEntity.setItem(stack);
+                if(itemEntity == null) continue;
 
-                        return itemEntity;
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                itemEntity.setItem(droppedStack);
+
+                itemEntities.add(itemEntity);
+            }
 
             droppedStacks.clear();
 
             var dropEventTest = NeoForge.EVENT_BUS.post(new CurioDropsEvent(entity, handler, damageSource, itemEntities, 0, false));
 
-            droppedStacks.addAll(itemEntities.stream().map(ItemEntity::getItem).toList());
+            for (var itemEntity : itemEntities) droppedStacks.add(itemEntity.getItem());
 
             return (dropEventTest.isCanceled()) ? net.fabricmc.fabric.api.util.TriState.FALSE : net.fabricmc.fabric.api.util.TriState.DEFAULT;
         }

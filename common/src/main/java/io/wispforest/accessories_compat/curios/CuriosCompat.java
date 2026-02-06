@@ -2,8 +2,11 @@ package io.wispforest.accessories_compat.curios;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.attributes.AccessoryAttributeBuilder;
+import io.wispforest.accessories.api.data.AccessoriesTags;
+import io.wispforest.accessories.api.slot.SlotType;
 import io.wispforest.accessories.data.SlotTypeLoader;
 import io.wispforest.accessories_compat.AccessoriesCompatInit;
 import io.wispforest.accessories_compat.api.EntityBindingModifier;
@@ -13,8 +16,8 @@ import io.wispforest.accessories_compat.api.tags.SlotTypesModifier;
 import io.wispforest.accessories_compat.curios.mixin.accessor.ItemizedCurioCapabilityAccessor;
 import io.wispforest.accessories_compat.curios.mixin.accessor.SlotTypeBuilderAccessor;
 import io.wispforest.accessories_compat.curios.wrapper.AccessoryFromCurio;
-import io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils;
 import io.wispforest.accessories_compat.utils.LoaderPlatformUtils;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -27,15 +30,18 @@ import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.CuriosConstants;
 import top.theillusivec4.curios.api.CurioAttributeModifiers;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.CuriosTags;
 import top.theillusivec4.curios.common.CuriosRegistry;
 import top.theillusivec4.curios.common.data.CuriosEntityManager;
 import top.theillusivec4.curios.common.data.CuriosSlotManager;
 
-import java.util.LinkedHashSet;
-import java.util.SequencedSet;
-import java.util.Set;
+import java.util.*;
+
+import static io.wispforest.accessories_compat.curios.wrapper.CuriosConversionUtils.*;
 
 public class CuriosCompat extends ModCompatibilityModule {
+
+    private static final ResourceLocation ALLOW_ALL_ACCESSORIES = ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "all_accessories");
 
     public static final CuriosCompat INSTANCE = create();
 
@@ -55,6 +61,46 @@ public class CuriosCompat extends ModCompatibilityModule {
     }
 
     @Override
+    public void init() {
+        if (AccessoriesCompatInit.CONFIG.addPocketSlot()) {
+            AccessoriesAPI.registerPredicate(ALLOW_ALL_ACCESSORIES, (level, slotType, slot, stack) -> {
+                var slots = SlotTypeLoader.getSlotTypes(level).values();
+
+                for (var slot1 : slots) {
+                    if (stack.is(AccessoriesAPI.getSlotTag(slot1))) return TriState.TRUE;
+                }
+
+                if (AccessoriesAPI.getAccessory(stack) != null) return TriState.TRUE;
+
+                for (var type : slots) {
+                    if (AccessoriesAPI.getPredicateResults(filterValidators(type), level, type, 0, stack)) return TriState.TRUE;
+                }
+
+                return TriState.DEFAULT;
+            });
+        }
+    }
+
+    public static Set<ResourceLocation> filterValidators(SlotType type) {
+        var validators = type.validators();
+
+        if (validators.contains(ALLOW_ALL_ACCESSORIES)) {
+            validators = new HashSet<>(validators);
+
+            validators.remove(ALLOW_ALL_ACCESSORIES);
+        }
+
+        return validators;
+    }
+
+    @Override
+    public void registerDataPacks(ResourcePackCallback callback) {
+        if (AccessoriesCompatInit.CONFIG.addPocketSlot()) {
+            callback.addForced(AccessoriesCompatInit.MODID, ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "curios_curio_compat"));
+        }
+    }
+
+    @Override
     public void registerDataLoaders(ReloadListenerRegisterCallback callback) {
         callback.registerSlotLoader(CuriosSlotManager.SERVER, ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "curios_slot_manager"));
         callback.registerEntitySlotLoader(CuriosEntityManager.SERVER, ResourceLocation.fromNamespaceAndPath(AccessoriesCompatInit.MODID, "curios_entity_manager"));
@@ -62,11 +108,11 @@ public class CuriosCompat extends ModCompatibilityModule {
 
     @Override
     public void addEntityBindings(EntityBindingModifier modifier) {
-        for (var entry : CuriosConversionUtils.CURRENT_ENTITY_BINDINGS.entrySet()) {
+        for (var entry : CURRENT_ENTITY_BINDINGS.entrySet()) {
             var addition = modifier.addTo(entry.getKey());
 
             for (String curiosId : entry.getValue().buildKeepingLast().keySet()) {
-                var accessoriesId = CuriosConversionUtils.slotConvertToA(curiosId);
+                var accessoriesId = slotConvertToA(curiosId);
 
                 addition.add(accessoriesId);
             }
@@ -77,10 +123,14 @@ public class CuriosCompat extends ModCompatibilityModule {
 
     @Override
     public void addSlotTypes(SlotTypesModifier modifier) {
-        CuriosConversionUtils.CURRENT_SLOT_BUILDERS.forEach((curiosId, curiosBuilder) -> {
+        exportedSlotsServer.clear();
+
+        CURRENT_SLOT_BUILDERS.forEach((curiosId, curiosBuilder) -> {
             var accessor = (SlotTypeBuilderAccessor) curiosBuilder;
 
-            var accessoriesId = CuriosConversionUtils.slotConvertToA(curiosId);
+            var accessoriesId = slotConvertToA(curiosId);
+
+            if (curiosId.equals(accessoriesId)) exportedSlotsServer.add(accessoriesId);
 
             SlotTypeLoader.SlotBuilder builder = modifier.getBuilder(accessoriesId);
             Integer slotsCurrentSize = null;
@@ -96,7 +146,7 @@ public class CuriosCompat extends ModCompatibilityModule {
 
                 if (accessor.getOrder() != null) builder.order(accessor.getOrder());
 
-                if (accessor.getDropRule() != null) builder.dropRule(CuriosConversionUtils.dropRuleConvertToA(accessor.getDropRule()));
+                if (accessor.getDropRule() != null) builder.dropRule(dropRuleConvertToA(accessor.getDropRule()));
 
                 builder.alternativeTranslation("curios.identifier." + curiosId);
             }
@@ -111,22 +161,36 @@ public class CuriosCompat extends ModCompatibilityModule {
 
             if(accessor.getValidators() != null) {
                 for (var validatorPredicate : accessor.getValidators()) {
-                    builder.validator(CuriosConversionUtils.convertToA(validatorPredicate));
+                    builder.validator(convertToA(validatorPredicate));
                 }
             }
         });
 
-        CuriosConversionUtils.CURRENT_SLOT_BUILDERS.clear();
+        CURRENT_SLOT_BUILDERS.clear();
     }
 
     @Override
     public SequencedSet<ResourceLocation> toAccessoriesTag(ResourceLocation moduleSlotTag) {
-        return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("accessories", CuriosConversionUtils.slotConvertToA(moduleSlotTag.getPath()))));
+        var curiosType = moduleSlotTag.getPath();
+
+        var set = new LinkedHashSet<ResourceLocation>();
+
+        set.add(ResourceLocation.fromNamespaceAndPath("accessories", slotConvertToA(moduleSlotTag.getPath())));
+
+        if (curiosType.equals("curio")) set.add(AccessoriesTags.ANY_TAG.location());
+
+        return set;
     }
 
     @Override
     public SequencedSet<ResourceLocation> fromAccessoriesTag(ResourceLocation accessoriesSlotTag) {
-        return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("curios", CuriosConversionUtils.slotConvertToC(accessoriesSlotTag.getPath()))));
+        var accessoriesType = accessoriesSlotTag.getPath();
+
+        if (accessoriesType.equals("any")) {
+            return new LinkedHashSet<>(Set.of(CuriosTags.CURIO.location()));
+        } else {
+            return new LinkedHashSet<>(Set.of(ResourceLocation.fromNamespaceAndPath("curios", slotConvertToC(accessoriesType))));
+        }
     }
 
     @Override
@@ -138,7 +202,7 @@ public class CuriosCompat extends ModCompatibilityModule {
         for (CurioAttributeModifiers.Entry entry : stack.getOrDefault(CuriosRegistry.CURIO_ATTRIBUTE_MODIFIERS.get(), CurioAttributeModifiers.EMPTY).modifiers()) {
             var targetSlot = entry.slot();
 
-            if (targetSlot.equals(CuriosConversionUtils.slotConvertToC(accessoriesSlotName)) || targetSlot.isBlank()) {
+            if (targetSlot.equals(slotConvertToC(accessoriesSlotName)) || targetSlot.isBlank()) {
                 var rl = entry.attribute();
 
                 if (rl == null) continue;

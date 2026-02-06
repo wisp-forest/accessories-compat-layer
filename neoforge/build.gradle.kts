@@ -113,6 +113,14 @@ dependencies {
         "sophisticated-core" to "1.21.1-1.3.71.1143"
     )
 
+    modrinthImplementation(
+        "relics-mod" to "0.10.7.6",
+        "octo-lib" to "cSBObQER",
+        "architectury-api" to "13.0.8+neoforge"
+    )
+    implementation("org.yaml:snakeyaml:2.2")
+    forgeRuntimeLibrary("org.yaml:snakeyaml:2.2")
+
     //modImplementation("de.mari_023:ae2wtlib:19.2.6")
     //modImplementation("de.mari_023:ae2wtlib_api:19.2.6")
     //modImplementation("org.appliedenergistics:appliedenergistics2:19.2.15")
