@@ -41,7 +41,7 @@ public abstract class AccessoriesEventHandlerMixin {
     @Inject(method = "addEntityBasedTooltipData", at = @At(value = "INVOKE", target = "Ljava/util/HashSet;containsAll(Ljava/util/Collection;)Z"))
     private static void cclayer$adjustTooltipForPocket(
         LivingEntity entity, Accessory accessory, ItemStack stack, List<Component> tooltip, Item.TooltipContext tooltipContext, TooltipFlag tooltipType, CallbackInfo ci,
-        @Local(name = "validSlotTypes") HashSet<SlotType> validSlotTypes, @Local(name = "sharedSlotTypes") Set<SlotType> sharedSlotTypes
+        @Local(name = "validSlotTypes") HashSet<SlotType> validSlotTypes, @Local(name = "sharedSlotTypes") HashSet<SlotType> sharedSlotTypes
     ) {
         var type = SlotTypeLoader.getSlotType(entity, "pocket");
 
