@@ -14,7 +14,18 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ConfigWrapper.class)
 public abstract class ConfigWrapperMixin {
 
-    @WrapOperation(method = "<init>(Ljava/lang/Class;Ljava/util/function/Consumer;)V", at = @At(value = "INVOKE", target = "Lio/wispforest/owo/serialization/endec/MinecraftEndecs;addDefaults(Lio/wispforest/endec/impl/ReflectiveEndecBuilder;)Lio/wispforest/endec/impl/ReflectiveEndecBuilder;"))
+    @WrapOperation(
+        method = {
+            "<init>(Ljava/lang/Class;Ljava/util/function/Consumer;)V",
+            "<init>(Ljava/lang/Class;Lio/wispforest/owo/config/ConfigWrapper$BuilderConsumer;)V"
+        },
+        require = 1,
+        allow = 1,
+        at = @At(
+            value = "INVOKE",
+            target = "Lio/wispforest/owo/serialization/endec/MinecraftEndecs;addDefaults(Lio/wispforest/endec/impl/ReflectiveEndecBuilder;)Lio/wispforest/endec/impl/ReflectiveEndecBuilder;"
+        )
+    )
     private ReflectiveEndecBuilder accessories$addRequiredEndec(ReflectiveEndecBuilder builder, Operation<ReflectiveEndecBuilder> original) {
         original.call(builder);
 
