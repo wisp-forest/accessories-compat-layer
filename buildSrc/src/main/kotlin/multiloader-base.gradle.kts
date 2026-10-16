@@ -1,4 +1,3 @@
-import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.main
 import io.wispforest.helpers.Extensions.libs
 import io.wispforest.helpers.Utils
 import io.wispforest.helpers.UtilsJava

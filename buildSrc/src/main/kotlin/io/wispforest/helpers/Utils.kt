@@ -1,22 +1,13 @@
 package io.wispforest.helpers
 
-import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.compileClasspath
-import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.fabricApi
-import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.fabricApi
-import gradle.kotlin.dsl.accessors._049fa54a8c482cde147c17c9a808c570.sourceSets
 import net.fabricmc.loom.configuration.ide.RunConfigSettings
-import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
-import org.gradle.api.Transformer
-import org.gradle.api.artifacts.Dependency
-import org.gradle.api.artifacts.ModuleDependency
-import org.gradle.kotlin.dsl.exclude
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
-import java.util.function.BiConsumer
-import kotlin.text.get
 
 object Utils {
     fun getSetupRunsAction(project: Project): Action<NamedDomainObjectContainer<RunConfigSettings>> {
@@ -33,16 +24,18 @@ object Utils {
             val addMixinDebugginRuns = enabledMixinDebuggingPlatforms.contains(currentPlatform)
             val addTestModRuns = enabledTestmodPlatforms.contains(currentPlatform)
 
+            val sourceSets = project.the<SourceSetContainer>()
+
             fun setupTestMod(settings: RunConfigSettings) {
                 project.afterEvaluate {
-                    settings.source(project.sourceSets["testmod"])
+                    settings.source(sourceSets["testmod"])
                 }
 
                 if (currentPlatform != "neoforge") return
 
                 settings.mods {
-                    create("${rootProject.property("test_mod_id")}") { sourceSet(project.sourceSets["testmod"]) }
-                    create("${rootProject.property("mod_id")}") { sourceSet(project.sourceSets["main"]) }
+                    create("${rootProject.property("test_mod_id")}") { sourceSet(sourceSets["testmod"]) }
+                    create("${rootProject.property("mod_id")}") { sourceSet(sourceSets["main"]) }
                 }
             }
 
@@ -66,12 +59,13 @@ object Utils {
                     // TODO: OUTSOURCE TO METHOD!
                     try {
                         project.afterEvaluate {
-                            val mixin = this.configurations.compileClasspath.get()
-                                .allDependencies
-                                .asIterable()
-                                .firstOrNull { it.name == "sponge-mixin" }
+                            val mixin = this.configurations["compileClasspath"]
+                                .incoming
+                                .artifacts
+                                .artifacts
+                                .firstOrNull { (it.id.componentIdentifier as? ModuleComponentIdentifier)?.module == "sponge-mixin" }
                             if (mixin != null) {
-                                settings.vmArg("-javaagent:\"${this.configurations.compileClasspath.get().files(mixin).first().path}\"")
+                                settings.vmArg("-javaagent:\"${mixin.file.path}\"")
                                 println("[Info]: Mixin Hotswap Run should be working")
                             } else {
                                 println("[Warning]: Unable to locate file path for Mixin Jar, HotSwap Run will not work!!!")
@@ -126,7 +120,7 @@ object Utils {
                         client()
                         ideConfigGenerated(true)
                         name("Minecraft Client - (RenderDoc)")
-                        source(project.sourceSets["main"])
+                        source(sourceSets["main"])
                         vmArg("-Dowo.renderdocPath=$renderDocPath")
                     }
                     if (addTestModRuns) {
@@ -134,7 +128,7 @@ object Utils {
                             client()
                             ideConfigGenerated(true)
                             name("Testmod Client - (RenderDoc)")
-                            source(project.sourceSets["testmod"])
+                            source(sourceSets["testmod"])
                             vmArg("-Dowo.renderdocPath=$renderDocPath")
 
                             setupTestMod(this)
@@ -166,7 +160,7 @@ object Utils {
         keys.forEachIndexed { i: Int, key: String ->
             if (key.isBlank()) return@forEachIndexed
 
-            val contactKey = key.toLowerCase().replace(" ", "_");
+            val contactKey = key.lowercase().replace(" ", "_");
             val hasContact = rootProject.hasProperty(contactKey)
 
             if (hasContact) {

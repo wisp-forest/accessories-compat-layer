@@ -115,7 +115,7 @@ dependencies {
 
     modrinthImplementation(
         "relics-mod" to "0.10.7.6",
-        "octo-lib" to "cSBObQER",
+        "shatterbyte-lib" to "cSBObQER",
         "architectury-api" to "13.0.8+neoforge"
     )
     implementation("org.yaml:snakeyaml:2.2")
