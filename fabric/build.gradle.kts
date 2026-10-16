@@ -5,7 +5,7 @@ import io.wispforest.helpers.Extensions.modrinthImplementation
 plugins {
     id("multiloader-base")
     id("multiloader-publishing")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 architectury {
@@ -140,7 +140,7 @@ loom {
 tasks.shadowJar {
     exclude("architectury.common.json")
 
-    configurations = mutableListOf<FileCollection>(project.configurations["shadowCommon"])
+    configurations = listOf(project.configurations["shadowCommon"])
     archiveClassifier.set("dev-shadow")
 }
 
@@ -157,6 +157,6 @@ tasks.sourcesJar {
     from(commonSources.get().archiveFile.map { zipTree(it) })
 }
 
-with(components["java"] as AdhocComponentWithVariants) {
-    withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) { skip() }
+shadow {
+    addShadowVariantIntoJavaComponent = false
 }
